@@ -39,7 +39,8 @@ npx remotion upgrade
 
 ## Docs
 
-Get started with Remotion by reading the [fundamentals page](https://www.remotion.dev/docs/the-fundamentals).
+- **Project docs** — See the [docs/](docs/README.md) folder for architecture, adding songs, SongConfig reference, lyrics/timing, and audio visualization.
+- **Remotion** — Get started with Remotion by reading the [fundamentals page](https://www.remotion.dev/docs/the-fundamentals).
 
 ## Help
 
