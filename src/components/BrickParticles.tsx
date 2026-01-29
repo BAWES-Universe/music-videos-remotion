@@ -39,7 +39,7 @@ export const BrickParticles: React.FC<{
   color?: string;
 }> = ({ intensity = 1, color = "#e94560" }) => {
   const frame = useCurrentFrame();
-  const { width, height, durationInFrames } = useVideoConfig();
+  const { width, height, durationInFrames, fps } = useVideoConfig();
 
   const particles = React.useMemo(
     () => generateParticles(Math.floor(20 * intensity), frame % 1000),
@@ -58,12 +58,14 @@ export const BrickParticles: React.FC<{
     <AbsoluteFill style={{ overflow: "hidden", opacity: globalOpacity }}>
       {particles.map((particle, i) => {
         const adjustedFrame = Math.max(0, frame - particle.delay);
-        const yOffset = adjustedFrame * particle.speed * 2;
+        const timeSeconds = adjustedFrame / fps;
+        // Time-based motion so preview and render match (percent per second)
+        const yOffset = timeSeconds * particle.speed * 20;
         const y = particle.y - (yOffset % 150);
-        const rotation = particle.rotation + adjustedFrame * 0.5;
+        const rotation = particle.rotation + timeSeconds * 15;
 
-        // Cycle opacity
-        const cycleOpacity = Math.sin(adjustedFrame * 0.05 + i) * 0.5 + 0.5;
+        // Cycle opacity (time-based)
+        const cycleOpacity = Math.sin(timeSeconds * 2 + i) * 0.5 + 0.5;
 
         return (
           <div
