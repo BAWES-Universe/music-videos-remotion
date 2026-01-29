@@ -42,7 +42,7 @@ export const BrickParticles: React.FC<{
   const { width, height, durationInFrames, fps } = useVideoConfig();
 
   const particles = React.useMemo(
-    () => generateParticles(Math.floor(20 * intensity), frame % 1000),
+    () => generateParticles(Math.floor(20 * intensity), 0),
     [intensity]
   );
 

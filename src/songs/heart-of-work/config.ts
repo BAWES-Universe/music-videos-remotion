@@ -22,6 +22,14 @@ export const heartOfWorkConfig: SongConfig = {
     },
   },
   
+  // Audio visualization - full style with radial + bars + wave
+  visualization: {
+    style: "full",
+    primaryColor: "#ee4540",
+    secondaryColor: "#f39422",
+    opacity: 0.7,
+  },
+  
   // Timing corrections for first chorus (Suno SRT was ~3.4s early)
   timingCorrections: {
     "Brick by brick, I breathe, I rise,": { startMs: 58180, duration: 3820 },
