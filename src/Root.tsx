@@ -5,8 +5,8 @@ import { heartOfWorkConfig } from "./songs";
 import type { SongConfig } from "./types/SongConfig";
 
 const FPS = 30;
-const WIDTH = 1920;
-const HEIGHT = 1080;
+const WIDTH = 3840;
+const HEIGHT = 2160;
 
 // All songs to register as compositions
 const songs: SongConfig[] = [
