@@ -17,6 +17,17 @@ export type ColorPalette = {
   accent: string;
 };
 
+// Audio visualization style
+export type VisualizerStyle = "none" | "radial" | "bars" | "wave" | "full";
+
+// Audio visualization config
+export type VisualizationConfig = {
+  style: VisualizerStyle;
+  primaryColor?: string;   // Main visualizer color (defaults to theme accent)
+  secondaryColor?: string; // Secondary/gradient color
+  opacity?: number;        // 0-1, default 0.8
+};
+
 // Full song configuration
 export type SongConfig = {
   // Metadata
@@ -42,6 +53,9 @@ export type SongConfig = {
       bridge?: string;
     };
   };
+  
+  // Audio visualization (optional)
+  visualization?: VisualizationConfig;
   
   // Timing corrections for specific lyrics (keyed by exact lyric text)
   // Only applied to first occurrence of each lyric

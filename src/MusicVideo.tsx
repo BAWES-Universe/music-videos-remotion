@@ -14,6 +14,7 @@ import { Audio } from "@remotion/media";
 import { AnimatedBackground } from "./components/AnimatedBackground";
 import { LyricLine as LyricLineComponent, TitleDisplay } from "./components/LyricDisplay";
 import { BrickParticles, ParticleBurst } from "./components/BrickParticles";
+import { AudioVisualizer } from "./components/AudioVisualizer";
 import {
   parseLyricsFromSrt,
   groupLyricsBySection,
@@ -24,6 +25,7 @@ import {
   type SongConfig,
   getSectionColors,
   getParticleColors,
+  DEFAULT_SECTION_COLORS,
 } from "./types/SongConfig";
 
 export type MusicVideoProps = {
@@ -115,6 +117,17 @@ export const MusicVideo: React.FC<MusicVideoProps> = ({ config }) => {
         intensity={currentSection === "chorus" ? 1.5 : 1}
         color={particleColor}
       />
+
+      {/* Audio visualization (if enabled) */}
+      {config.visualization && config.visualization.style !== "none" && (
+        <AudioVisualizer
+          audioSrc={config.audioFile}
+          style={config.visualization.style}
+          primaryColor={config.visualization.primaryColor ?? sectionColors[currentSection].accent}
+          secondaryColor={config.visualization.secondaryColor ?? sectionColors.chorus.accent}
+          opacity={config.visualization.opacity ?? 0.8}
+        />
+      )}
 
       {/* Title sequence during intro */}
       <Sequence from={0} durationInFrames={Math.min(introEndFrame, 90)} premountFor={30}>
