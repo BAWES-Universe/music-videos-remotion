@@ -8,6 +8,8 @@ import {
 } from "remotion";
 import { useAudioData, visualizeAudio } from "@remotion/media-utils";
 
+const REF_WIDTH = 1920;
+
 type VisualizerStyle = "radial" | "bars" | "wave" | "full";
 
 type AudioVisualizerProps = {
@@ -27,15 +29,16 @@ const RadialVisualizer: React.FC<{
 }> = ({ frequencyData, primaryColor, secondaryColor, opacity }) => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
+  const scale = width / REF_WIDTH;
 
   const centerX = width / 2;
   const centerY = height / 2;
   const baseRadius = Math.min(width, height) * 0.15;
   const maxBarHeight = Math.min(width, height) * 0.25;
 
-  // Use more bars for smoother look
+  // Use more bars for smoother look (bar width scales with resolution)
   const numBars = 64;
-  const barWidth = 4;
+  const barWidth = 4 * scale;
 
   // Sample frequency data to match our bar count
   const sampledData = useMemo(() => {
@@ -62,7 +65,7 @@ const RadialVisualizer: React.FC<{
         opacity,
       }}
     >
-      {/* Glow effect behind */}
+      {/* Glow effect behind (blur scales with resolution) */}
       <div
         style={{
           position: "absolute",
@@ -72,7 +75,7 @@ const RadialVisualizer: React.FC<{
           height: baseRadius * 4,
           transform: "translate(-50%, -50%)",
           background: `radial-gradient(circle, ${primaryColor}40 0%, transparent 70%)`,
-          filter: "blur(40px)",
+          filter: `blur(${40 * scale}px)`,
         }}
       />
 
@@ -84,7 +87,7 @@ const RadialVisualizer: React.FC<{
       >
         <defs>
           <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+            <feGaussianBlur stdDeviation={4 * scale} result="coloredBlur" />
             <feMerge>
               <feMergeNode in="coloredBlur" />
               <feMergeNode in="SourceGraphic" />
@@ -96,14 +99,14 @@ const RadialVisualizer: React.FC<{
           </linearGradient>
         </defs>
 
-        {/* Inner pulsing circle */}
+        {/* Inner pulsing circle (stroke scales with resolution) */}
         <circle
           cx={centerX}
           cy={centerY}
-          r={baseRadius * 0.8 + sampledData.slice(0, 8).reduce((a, b) => a + b, 0) * 10}
+          r={baseRadius * 0.8 + sampledData.slice(0, 8).reduce((a, b) => a + b, 0) * 10 * scale}
           fill="none"
           stroke={primaryColor}
-          strokeWidth={2}
+          strokeWidth={2 * scale}
           opacity={0.6}
           filter="url(#glow)"
         />
@@ -112,7 +115,7 @@ const RadialVisualizer: React.FC<{
         <g transform={`rotate(${rotation}, ${centerX}, ${centerY})`}>
           {sampledData.map((value, i) => {
             const angle = (i / numBars) * Math.PI * 2 - Math.PI / 2;
-            const barHeight = value * maxBarHeight + 5;
+            const barHeight = value * maxBarHeight + 5 * scale;
 
             const x1 = centerX + Math.cos(angle) * baseRadius;
             const y1 = centerY + Math.sin(angle) * baseRadius;
@@ -140,11 +143,11 @@ const RadialVisualizer: React.FC<{
           })}
         </g>
 
-        {/* Mirror bars (inner) for symmetry */}
+        {/* Mirror bars (inner) for symmetry (stroke scales with resolution) */}
         <g transform={`rotate(${-rotation * 0.5}, ${centerX}, ${centerY})`}>
           {sampledData.map((value, i) => {
             const angle = (i / numBars) * Math.PI * 2 - Math.PI / 2;
-            const barHeight = value * maxBarHeight * 0.4 + 2;
+            const barHeight = value * maxBarHeight * 0.4 + 2 * scale;
 
             const x1 = centerX + Math.cos(angle) * (baseRadius * 0.7);
             const y1 = centerY + Math.sin(angle) * (baseRadius * 0.7);
@@ -159,7 +162,7 @@ const RadialVisualizer: React.FC<{
                 x2={x2}
                 y2={y2}
                 stroke={secondaryColor}
-                strokeWidth={2}
+                strokeWidth={2 * scale}
                 strokeLinecap="round"
                 opacity={0.3 + value * 0.4}
               />
@@ -171,7 +174,7 @@ const RadialVisualizer: React.FC<{
   );
 };
 
-// Horizontal bar visualizer (bottom of screen)
+// Horizontal bar visualizer (bottom of screen, scales with resolution)
 const BarVisualizer: React.FC<{
   frequencyData: number[];
   primaryColor: string;
@@ -179,9 +182,10 @@ const BarVisualizer: React.FC<{
   opacity: number;
 }> = ({ frequencyData, primaryColor, secondaryColor, opacity }) => {
   const { width, height } = useVideoConfig();
+  const scale = width / REF_WIDTH;
 
   const numBars = 64;
-  const barWidth = width / numBars - 2;
+  const barWidth = width / numBars - 2 * scale;
   const maxHeight = height * 0.15;
 
   const sampledData = useMemo(() => {
@@ -201,17 +205,16 @@ const BarVisualizer: React.FC<{
         bottom: 0,
         left: 0,
         width: "100%",
-        height: maxHeight + 20,
+        height: maxHeight + 20 * scale,
         display: "flex",
         alignItems: "flex-end",
         justifyContent: "center",
-        gap: 2,
+        gap: 2 * scale,
         opacity,
       }}
     >
       {sampledData.map((value, i) => {
-        const barHeight = Math.max(4, value * maxHeight);
-        const hue = (i / numBars) * 60; // Gradient from primary to secondary
+        const barHeight = Math.max(4 * scale, value * maxHeight);
 
         return (
           <div
@@ -220,8 +223,8 @@ const BarVisualizer: React.FC<{
               width: barWidth,
               height: barHeight,
               background: `linear-gradient(to top, ${primaryColor}, ${secondaryColor})`,
-              borderRadius: "2px 2px 0 0",
-              boxShadow: `0 0 ${10 + value * 20}px ${primaryColor}60`,
+              borderRadius: `${2 * scale}px ${2 * scale}px 0 0`,
+              boxShadow: `0 0 ${(10 + value * 20) * scale}px ${primaryColor}60`,
               opacity: 0.5 + value * 0.5,
             }}
           />
@@ -231,7 +234,7 @@ const BarVisualizer: React.FC<{
   );
 };
 
-// Wave visualizer (ambient background wave)
+// Wave visualizer (ambient background wave, scales with resolution)
 const WaveVisualizer: React.FC<{
   frequencyData: number[];
   primaryColor: string;
@@ -240,6 +243,7 @@ const WaveVisualizer: React.FC<{
 }> = ({ frequencyData, primaryColor, secondaryColor, opacity }) => {
   const frame = useCurrentFrame();
   const { width, height, fps } = useVideoConfig();
+  const scale = width / REF_WIDTH;
 
   // Create multiple wave layers
   const waves = useMemo(() => {
@@ -261,7 +265,7 @@ const WaveVisualizer: React.FC<{
         const baseY = height * 0.5;
         const waveY =
           Math.sin((i / numPoints) * Math.PI * 4 + frame * waveSpeed + waveOffset) *
-          (30 + freqValue * 80);
+          (30 + freqValue * 80) * scale;
         const y = baseY + waveY;
 
         points.push(`${x},${y}`);
@@ -271,7 +275,7 @@ const WaveVisualizer: React.FC<{
     }
 
     return result;
-  }, [frequencyData, frame, width, height]);
+  }, [frequencyData, frame, width, height, scale]);
 
   return (
     <svg
@@ -286,7 +290,7 @@ const WaveVisualizer: React.FC<{
           <stop offset="100%" stopColor={primaryColor} stopOpacity={0.3} />
         </linearGradient>
         <filter id="waveGlow">
-          <feGaussianBlur stdDeviation="8" />
+          <feGaussianBlur stdDeviation={8 * scale} />
         </filter>
       </defs>
 
@@ -296,7 +300,7 @@ const WaveVisualizer: React.FC<{
           points={points}
           fill="none"
           stroke="url(#waveGradient)"
-          strokeWidth={3 - i}
+          strokeWidth={(3 - i) * scale}
           opacity={0.4 - i * 0.1}
           filter="url(#waveGlow)"
         />
@@ -305,7 +309,7 @@ const WaveVisualizer: React.FC<{
   );
 };
 
-// Reactive particles that respond to bass
+// Reactive particles that respond to bass (scale with resolution)
 const ReactiveParticles: React.FC<{
   frequencyData: number[];
   primaryColor: string;
@@ -313,6 +317,7 @@ const ReactiveParticles: React.FC<{
 }> = ({ frequencyData, primaryColor, opacity }) => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
+  const scale = width / REF_WIDTH;
 
   // Get bass level (average of low frequencies)
   const bassLevel = useMemo(() => {
@@ -343,8 +348,9 @@ const ReactiveParticles: React.FC<{
     <div style={{ position: "absolute", inset: 0, opacity }}>
       {particles.map((p, i) => {
         const pulse = 1 + bassLevel * 2;
-        const x = p.x * width + Math.sin(frame * 0.02 + p.offset) * 50;
-        const y = p.y * height + Math.cos(frame * 0.015 + p.offset) * 30;
+        const size = p.size * scale * pulse;
+        const x = p.x * width + Math.sin(frame * 0.02 + p.offset) * 50 * scale;
+        const y = p.y * height + Math.cos(frame * 0.015 + p.offset) * 30 * scale;
 
         return (
           <div
@@ -353,11 +359,11 @@ const ReactiveParticles: React.FC<{
               position: "absolute",
               left: x,
               top: y,
-              width: p.size * pulse,
-              height: p.size * pulse,
+              width: size,
+              height: size,
               borderRadius: "50%",
               backgroundColor: primaryColor,
-              boxShadow: `0 0 ${p.size * pulse * 2}px ${primaryColor}`,
+              boxShadow: `0 0 ${size * 2}px ${primaryColor}`,
               opacity: 0.3 + bassLevel * 0.5,
             }}
           />

@@ -9,27 +9,30 @@ import { type Section, type ColorPalette, DEFAULT_SECTION_COLORS } from "../type
 
 type SectionColors = Record<Section, ColorPalette>;
 
-// Floating brick/block shapes
+const REF_WIDTH = 1920;
+
+// Floating brick/block shapes (scale with resolution)
 const FloatingBrick: React.FC<{
   index: number;
   colors: ColorPalette;
 }> = ({ index, colors }) => {
   const frame = useCurrentFrame();
   const { durationInFrames, width, height } = useVideoConfig();
+  const scale = width / REF_WIDTH;
 
   // Each brick has unique properties based on index
   const seed = index * 137.5;
   const baseX = ((seed * 7) % 100) * (width / 100);
   const baseY = ((seed * 11) % 100) * (height / 100);
-  const size = 20 + ((seed * 3) % 60);
+  const size = (20 + ((seed * 3) % 60)) * scale;
   const rotationSpeed = 0.1 + ((seed * 0.01) % 0.3);
   const floatSpeed = 0.02 + ((seed * 0.005) % 0.03);
-  const floatAmplitude = 20 + ((seed * 2) % 40);
+  const floatAmplitude = (20 + ((seed * 2) % 40)) * scale;
 
   // Animate position and rotation
   const rotation = frame * rotationSpeed;
   const floatOffset = Math.sin(frame * floatSpeed) * floatAmplitude;
-  const driftX = Math.sin(frame * 0.01 + seed) * 30;
+  const driftX = Math.sin(frame * 0.01 + seed) * 30 * scale;
 
   // Opacity based on position in video
   const opacity = interpolate(
@@ -50,7 +53,7 @@ const FloatingBrick: React.FC<{
         backgroundColor: colors.accent,
         opacity,
         transform: `rotate(${rotation}deg)`,
-        borderRadius: 4,
+        borderRadius: 4 * scale,
         boxShadow: `0 0 ${size / 2}px ${colors.accent}40`,
       }}
     />
@@ -108,13 +111,15 @@ export const AnimatedBackground: React.FC<{
         }}
       />
 
-      {/* Noise texture overlay */}
+      {/* Noise texture overlay (tiled so it doesn't stretch and pixelate at 4K) */}
       <div
         style={{
           position: "absolute",
           inset: 0,
           opacity: 0.03,
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          backgroundSize: "256px 256px",
+          backgroundRepeat: "repeat",
         }}
       />
 

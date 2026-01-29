@@ -6,6 +6,8 @@ import {
   useVideoConfig,
 } from "remotion";
 
+const REF_WIDTH = 1920;
+
 type Particle = {
   x: number;
   y: number;
@@ -33,13 +35,14 @@ const generateParticles = (count: number, seed: number): Particle[] => {
   return particles;
 };
 
-// Rising brick/dust particles
+// Rising brick/dust particles (scale with resolution)
 export const BrickParticles: React.FC<{
   intensity?: number;
   color?: string;
 }> = ({ intensity = 1, color = "#e94560" }) => {
   const frame = useCurrentFrame();
   const { width, height, durationInFrames, fps } = useVideoConfig();
+  const scale = width / REF_WIDTH;
 
   const particles = React.useMemo(
     () => generateParticles(Math.floor(20 * intensity), 0),
@@ -63,6 +66,7 @@ export const BrickParticles: React.FC<{
         const yOffset = timeSeconds * particle.speed * 20;
         const y = particle.y - (yOffset % 150);
         const rotation = particle.rotation + timeSeconds * 15;
+        const size = particle.size * scale;
 
         // Cycle opacity (time-based)
         const cycleOpacity = Math.sin(timeSeconds * 2 + i) * 0.5 + 0.5;
@@ -74,13 +78,13 @@ export const BrickParticles: React.FC<{
               position: "absolute",
               left: `${particle.x}%`,
               top: `${y}%`,
-              width: particle.size,
-              height: particle.size * 0.6,
+              width: size,
+              height: size * 0.6,
               backgroundColor: color,
               opacity: particle.opacity * cycleOpacity,
               transform: `rotate(${rotation}deg)`,
-              borderRadius: 2,
-              boxShadow: `0 0 ${particle.size}px ${color}40`,
+              borderRadius: 2 * scale,
+              boxShadow: `0 0 ${size}px ${color}40`,
             }}
           />
         );
@@ -89,13 +93,14 @@ export const BrickParticles: React.FC<{
   );
 };
 
-// Dramatic particle burst for chorus/bridge
+// Dramatic particle burst for chorus/bridge (scale with resolution)
 export const ParticleBurst: React.FC<{
   triggerFrame: number;
   color?: string;
 }> = ({ triggerFrame, color = "#ee4540" }) => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
+  const scale = width / REF_WIDTH;
 
   const burstFrame = frame - triggerFrame;
   if (burstFrame < 0 || burstFrame > 60) return null;
@@ -106,7 +111,7 @@ export const ParticleBurst: React.FC<{
     <AbsoluteFill style={{ overflow: "hidden" }}>
       {Array.from({ length: 30 }).map((_, i) => {
         const angle = (i / 30) * Math.PI * 2;
-        const distance = interpolate(progress, [0, 1], [0, 400], {
+        const distance = interpolate(progress, [0, 1], [0, 400 * scale], {
           extrapolateRight: "clamp",
         });
         const x = width / 2 + Math.cos(angle) * distance;
@@ -114,7 +119,7 @@ export const ParticleBurst: React.FC<{
         const opacity = interpolate(progress, [0, 0.5, 1], [1, 0.8, 0], {
           extrapolateRight: "clamp",
         });
-        const size = interpolate(progress, [0, 1], [8, 2], {
+        const size = interpolate(progress, [0, 1], [8 * scale, 2 * scale], {
           extrapolateRight: "clamp",
         });
 
@@ -129,8 +134,8 @@ export const ParticleBurst: React.FC<{
               height: size * 0.6,
               backgroundColor: color,
               opacity,
-              borderRadius: 2,
-              boxShadow: `0 0 20px ${color}`,
+              borderRadius: 2 * scale,
+              boxShadow: `0 0 ${20 * scale}px ${color}`,
             }}
           />
         );
