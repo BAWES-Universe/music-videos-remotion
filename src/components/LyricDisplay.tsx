@@ -68,6 +68,9 @@ const SECTION_STYLES: Record<
   },
 };
 
+// Reference width for scale (1080p)
+const REF_WIDTH = 1920;
+
 // Word component with highlight animation
 const Word: React.FC<{
   word: string;
@@ -76,7 +79,8 @@ const Word: React.FC<{
   progress: number;
   style: (typeof SECTION_STYLES)[Section];
   isChorus: boolean;
-}> = ({ word, index, totalWords, progress, style, isChorus }) => {
+  scale: number;
+}> = ({ word, index, totalWords, progress, style, isChorus, scale }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -103,7 +107,7 @@ const Word: React.FC<{
     : 1;
 
   const opacity = interpolate(entrance, [0, 1], [0, 1]);
-  const translateY = interpolate(entrance, [0, 1], [20, 0]);
+  const translateY = interpolate(entrance, [0, 1], [20 * scale, 0]);
 
   // Color transition
   const color = isActive
@@ -112,11 +116,11 @@ const Word: React.FC<{
       ? style.color
       : `${style.color}99`;
 
-  // Glow effect for active word
+  // Glow effect for active word (scaled)
   const textShadow = isActive
-    ? `0 0 20px ${style.glowColor}, 0 0 40px ${style.glowColor}60`
+    ? `0 0 ${20 * scale}px ${style.glowColor}, 0 0 ${40 * scale}px ${style.glowColor}60`
     : isPast
-      ? `0 0 10px ${style.glowColor}30`
+      ? `0 0 ${10 * scale}px ${style.glowColor}30`
       : "none";
 
   return (
@@ -144,8 +148,9 @@ export const LyricLine: React.FC<{
   lineProgress: number;
 }> = ({ text, section, lineProgress }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, width } = useVideoConfig();
 
+  const scale = width / REF_WIDTH;
   const style = SECTION_STYLES[section];
   const words = text.split(" ");
   const isChorus = section === "chorus";
@@ -165,13 +170,13 @@ export const LyricLine: React.FC<{
       style={{
         justifyContent: "center",
         alignItems: "center",
-        padding: "0 80px",
+        padding: `0 ${80 * scale}px`,
       }}
     >
       <div
         style={{
           fontFamily,
-          fontSize: style.fontSize,
+          fontSize: style.fontSize * scale,
           textAlign: "center",
           lineHeight: 1.3,
           opacity: lineOpacity,
@@ -189,6 +194,7 @@ export const LyricLine: React.FC<{
             progress={lineProgress}
             style={style}
             isChorus={isChorus}
+            scale={scale}
           />
         ))}
       </div>
@@ -202,7 +208,9 @@ export const TitleDisplay: React.FC<{
   subtitle?: string;
 }> = ({ title, subtitle }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, width } = useVideoConfig();
+
+  const scale = width / REF_WIDTH;
 
   const titleEntrance = spring({
     frame,
@@ -227,14 +235,14 @@ export const TitleDisplay: React.FC<{
         <h1
           style={{
             fontFamily,
-            fontSize: 96,
+            fontSize: 96 * scale,
             color: "#ffffff",
             textTransform: "uppercase",
             letterSpacing: "0.15em",
             margin: 0,
             opacity: titleEntrance,
-            transform: `translateY(${interpolate(titleEntrance, [0, 1], [40, 0])}px)`,
-            textShadow: "0 0 60px #e9456080, 0 0 120px #e9456040",
+            transform: `translateY(${interpolate(titleEntrance, [0, 1], [40, 0]) * scale}px)`,
+            textShadow: `0 0 ${60 * scale}px #e9456080, 0 0 ${120 * scale}px #e9456040`,
           }}
         >
           {title}
@@ -243,13 +251,13 @@ export const TitleDisplay: React.FC<{
           <p
             style={{
               fontFamily,
-              fontSize: 32,
+              fontSize: 32 * scale,
               color: "#e94560",
               textTransform: "uppercase",
               letterSpacing: "0.3em",
-              marginTop: 20,
+              marginTop: 20 * scale,
               opacity: subtitleEntrance,
-              transform: `translateY(${interpolate(subtitleEntrance, [0, 1], [20, 0])}px)`,
+              transform: `translateY(${interpolate(subtitleEntrance, [0, 1], [20, 0]) * scale}px)`,
             }}
           >
             {subtitle}
