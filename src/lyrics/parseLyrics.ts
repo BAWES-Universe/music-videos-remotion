@@ -19,15 +19,12 @@ const SECTION_LABELS = [
   "—", // em dash only line
 ];
 
-// Timing corrections for specific lyrics (in milliseconds)
-// Format: { "lyric text prefix": { startOffset: ms, durationOverride?: ms } }
-// The first chorus in Suno's SRT starts ~3.4s early
-const TIMING_CORRECTIONS: Record<string, { startOffset?: number; duration?: number }> = {
-  // First chorus - shift start by +3450ms (58.18s instead of 54.73s)
-  "Brick by brick, I breathe, I rise,": { startOffset: 3450, duration: 6000 },
-  "Heart of work beneath the skies.": { startOffset: 3500, duration: 3500 },
-  "When the world forgets its name,": { startOffset: 3500, duration: 2800 },
-  "I remember — I remain.": { startOffset: 3500, duration: 4000 },
+// First chorus: exact start times (ms). Durations so each line ends when the next starts (no overlap).
+const TIMING_CORRECTIONS: Record<string, { startMs?: number; startOffset?: number; duration?: number }> = {
+  "Brick by brick, I breathe, I rise,": { startMs: 58180, duration: 3820 }, // 00:58.18 → ends at 01:02.00
+  "Heart of work beneath the skies.": { startMs: 62000, duration: 3030 },   // 01:02.00 → ends at 01:05.03
+  "When the world forgets its name,": { startMs: 65030, duration: 2870 }, // 01:05.03 → ends 01:07.90
+  "I remember — I remain.": { startMs: 67900, duration: 4100 },            // 01:07.90 → no gap after "When the world"
 };
 
 // Check if this is the FIRST occurrence of a lyric (for corrections that only apply once)
@@ -83,10 +80,14 @@ export const parseLyricsFromSrt = (srtContent: string): LyricLine[] => {
     const correction = TIMING_CORRECTIONS[text];
     const applyCorrection = correction && chorusCount === 1 && isFirstOccurrence(text, lyrics);
 
-    // Calculate start time with optional correction
+    // Calculate start time: use absolute startMs if set, else apply startOffset
     let startMs = caption.startMs;
-    if (applyCorrection && correction.startOffset) {
-      startMs += correction.startOffset;
+    if (applyCorrection && correction) {
+      if (correction.startMs !== undefined) {
+        startMs = correction.startMs;
+      } else if (correction.startOffset) {
+        startMs += correction.startOffset;
+      }
     }
 
     // Calculate end time
