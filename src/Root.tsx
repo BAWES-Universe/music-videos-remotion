@@ -6,9 +6,8 @@ const FPS = 30;
 const WIDTH = 1920;
 const HEIGHT = 1080;
 
-// Song duration from SRT: last lyric ends at ~3:11 (191 seconds)
-// Adding buffer for fade out
-const SONG_DURATION_SECONDS = 195;
+// Song duration: 3:32
+const SONG_DURATION_SECONDS = 3 * 60 + 32; // 212
 
 export const RemotionRoot: React.FC = () => {
   return (
