@@ -1,4 +1,5 @@
 import { parseSrt, Caption } from "@remotion/captions";
+import type { TimingCorrection } from "../types/SongConfig";
 
 export type LyricLine = {
   startMs: number;
@@ -18,14 +19,6 @@ const SECTION_LABELS = [
   "(INTRO)",
   "—", // em dash only line
 ];
-
-// First chorus: exact start times (ms). Durations so each line ends when the next starts (no overlap).
-const TIMING_CORRECTIONS: Record<string, { startMs?: number; startOffset?: number; duration?: number }> = {
-  "Brick by brick, I breathe, I rise,": { startMs: 58180, duration: 3820 }, // 00:58.18 → ends at 01:02.00
-  "Heart of work beneath the skies.": { startMs: 62000, duration: 3030 },   // 01:02.00 → ends at 01:05.03
-  "When the world forgets its name,": { startMs: 65030, duration: 2870 }, // 01:05.03 → ends 01:07.90
-  "I remember — I remain.": { startMs: 67900, duration: 4100 },            // 01:07.90 → no gap after "When the world"
-};
 
 // Check if this is the FIRST occurrence of a lyric (for corrections that only apply once)
 const isFirstOccurrence = (text: string, lyrics: LyricLine[]): boolean => {
@@ -50,7 +43,11 @@ const getSectionFromLabel = (
   return null;
 };
 
-export const parseLyricsFromSrt = (srtContent: string): LyricLine[] => {
+// Parse SRT content with optional timing corrections
+export const parseLyricsFromSrt = (
+  srtContent: string,
+  timingCorrections?: Record<string, TimingCorrection>
+): LyricLine[] => {
   const { captions } = parseSrt({ input: srtContent });
 
   const lyrics: LyricLine[] = [];
@@ -76,8 +73,8 @@ export const parseLyricsFromSrt = (srtContent: string): LyricLine[] => {
       continue;
     }
 
-    // Get timing correction if available (only for first chorus)
-    const correction = TIMING_CORRECTIONS[text];
+    // Get timing correction if available (only for first chorus, first occurrence)
+    const correction = timingCorrections?.[text];
     const applyCorrection = correction && chorusCount === 1 && isFirstOccurrence(text, lyrics);
 
     // Calculate start time: use absolute startMs if set, else apply startOffset

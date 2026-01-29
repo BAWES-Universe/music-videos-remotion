@@ -4,65 +4,18 @@ import {
   interpolate,
   useCurrentFrame,
   useVideoConfig,
-  Easing,
 } from "remotion";
-import type { LyricLine } from "../lyrics/parseLyrics";
+import { type Section, type ColorPalette, DEFAULT_SECTION_COLORS } from "../types/SongConfig";
 
-type Section = LyricLine["section"];
-
-// Color palettes for each section
-const SECTION_COLORS: Record<
-  Section,
-  { bg1: string; bg2: string; bg3: string; accent: string }
-> = {
-  intro: {
-    bg1: "#0a0a0f",
-    bg2: "#1a1a2e",
-    bg3: "#16213e",
-    accent: "#e94560",
-  },
-  verse: {
-    bg1: "#1a1a2e",
-    bg2: "#16213e",
-    bg3: "#0f3460",
-    accent: "#e94560",
-  },
-  "pre-chorus": {
-    bg1: "#16213e",
-    bg2: "#1f4068",
-    bg3: "#1b1b2f",
-    accent: "#f39422",
-  },
-  chorus: {
-    bg1: "#2d132c",
-    bg2: "#801336",
-    bg3: "#c72c41",
-    accent: "#ee4540",
-  },
-  bridge: {
-    bg1: "#0d0d0d",
-    bg2: "#1a1a1a",
-    bg3: "#2d2d2d",
-    accent: "#f5af19",
-  },
-  outro: {
-    bg1: "#1a1a2e",
-    bg2: "#16213e",
-    bg3: "#0f3460",
-    accent: "#a855f7",
-  },
-};
+type SectionColors = Record<Section, ColorPalette>;
 
 // Floating brick/block shapes
 const FloatingBrick: React.FC<{
   index: number;
-  totalBricks: number;
-  section: Section;
-}> = ({ index, totalBricks, section }) => {
+  colors: ColorPalette;
+}> = ({ index, colors }) => {
   const frame = useCurrentFrame();
   const { durationInFrames, width, height } = useVideoConfig();
-
-  const colors = SECTION_COLORS[section];
 
   // Each brick has unique properties based on index
   const seed = index * 137.5;
@@ -108,11 +61,12 @@ const FloatingBrick: React.FC<{
 export const AnimatedBackground: React.FC<{
   section: Section;
   sectionProgress: number;
-}> = ({ section, sectionProgress }) => {
+  sectionColors?: SectionColors;
+}> = ({ section, sectionProgress, sectionColors = DEFAULT_SECTION_COLORS }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const colors = SECTION_COLORS[section];
+  const colors = sectionColors[section];
 
   // Gradient animation
   const gradientAngle = interpolate(frame, [0, 10 * fps], [135, 225], {
@@ -142,7 +96,7 @@ export const AnimatedBackground: React.FC<{
 
       {/* Floating bricks */}
       {Array.from({ length: 12 }).map((_, i) => (
-        <FloatingBrick key={i} index={i} totalBricks={12} section={section} />
+        <FloatingBrick key={i} index={i} colors={colors} />
       ))}
 
       {/* Radial overlay for depth */}

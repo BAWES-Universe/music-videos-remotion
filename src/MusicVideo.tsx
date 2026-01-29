@@ -10,10 +10,6 @@ import {
   cancelRender,
 } from "remotion";
 import { Audio } from "@remotion/media";
-import { TransitionSeries, linearTiming } from "@remotion/transitions";
-import { fade } from "@remotion/transitions/fade";
-import { slide } from "@remotion/transitions/slide";
-import { wipe } from "@remotion/transitions/wipe";
 
 import { AnimatedBackground } from "./components/AnimatedBackground";
 import { LyricLine as LyricLineComponent, TitleDisplay } from "./components/LyricDisplay";
@@ -24,10 +20,14 @@ import {
   type LyricLine,
   type LyricSection,
 } from "./lyrics/parseLyrics";
+import {
+  type SongConfig,
+  getSectionColors,
+  getParticleColors,
+} from "./types/SongConfig";
 
-export type CompositionProps = {
-  audioSrc: string;
-  srtSrc: string;
+export type MusicVideoProps = {
+  config: SongConfig;
 };
 
 // Get current section based on frame/time
@@ -43,11 +43,8 @@ const getCurrentSection = (
   return "intro";
 };
 
-// Main composition component
-export const MyComposition: React.FC<CompositionProps> = ({
-  audioSrc,
-  srtSrc,
-}) => {
+// Main music video component - config-driven
+export const MusicVideo: React.FC<MusicVideoProps> = ({ config }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
 
@@ -55,12 +52,15 @@ export const MyComposition: React.FC<CompositionProps> = ({
   const [lyrics, setLyrics] = useState<LyricLine[]>([]);
   const [sections, setSections] = useState<LyricSection[]>([]);
 
-  // Load and parse SRT
+  // Get colors from config
+  const sectionColors = getSectionColors(config);
+
+  // Load and parse SRT with song-specific timing corrections
   const loadLyrics = useCallback(async () => {
     try {
-      const response = await fetch(srtSrc);
+      const response = await fetch(staticFile(config.srtFile));
       const srtContent = await response.text();
-      const parsedLyrics = parseLyricsFromSrt(srtContent);
+      const parsedLyrics = parseLyricsFromSrt(srtContent, config.timingCorrections);
       const groupedSections = groupLyricsBySection(parsedLyrics);
 
       setLyrics(parsedLyrics);
@@ -69,7 +69,7 @@ export const MyComposition: React.FC<CompositionProps> = ({
     } catch (e) {
       cancelRender(e);
     }
-  }, [srtSrc, handle]);
+  }, [config.srtFile, config.timingCorrections, handle]);
 
   useEffect(() => {
     loadLyrics();
@@ -95,29 +95,30 @@ export const MyComposition: React.FC<CompositionProps> = ({
   // Intro duration (before first lyric)
   const introEndFrame = lyrics.length > 0 ? Math.floor((lyrics[0].startMs / 1000) * fps) : 60;
 
+  // Get particle color for current section
+  const particleColor = getParticleColors(config, currentSection);
+
   return (
     <AbsoluteFill style={{ backgroundColor: "#000" }}>
       {/* Audio track */}
-      <Audio src={audioSrc} />
+      <Audio src={staticFile(config.audioFile)} />
 
       {/* Animated background based on current section */}
-      <AnimatedBackground section={currentSection} sectionProgress={sectionProgress} />
+      <AnimatedBackground
+        section={currentSection}
+        sectionProgress={sectionProgress}
+        sectionColors={sectionColors}
+      />
 
       {/* Rising brick particles */}
       <BrickParticles
         intensity={currentSection === "chorus" ? 1.5 : 1}
-        color={
-          currentSection === "chorus"
-            ? "#ee4540"
-            : currentSection === "bridge"
-              ? "#f5af19"
-              : "#e94560"
-        }
+        color={particleColor}
       />
 
       {/* Title sequence during intro */}
       <Sequence from={0} durationInFrames={Math.min(introEndFrame, 90)} premountFor={30}>
-        <TitleDisplay title="Heart of Work" subtitle="Brick by Brick" />
+        <TitleDisplay title={config.title} subtitle={config.subtitle} />
       </Sequence>
 
       {/* Render each lyric line */}
@@ -153,7 +154,7 @@ export const MyComposition: React.FC<CompositionProps> = ({
               durationInFrames={60}
               premountFor={5}
             >
-              <ParticleBurst triggerFrame={0} color="#ee4540" />
+              <ParticleBurst triggerFrame={0} color={getParticleColors(config, "chorus")} />
             </Sequence>
           );
         })}
