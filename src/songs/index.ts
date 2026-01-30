@@ -5,6 +5,7 @@ export { stillnessWeaponizedConfig } from "./stillness-weaponized/config";
 export { pressureButIDontBreakConfig } from "./pressure-but-i-dont-break/config";
 export { whenGiantsWakeConfig } from "./when-giants-wake/config";
 export { reenergizeWhenISeeYouAgainConfig } from "./reenergize-when-isee-you-again/config";
+export { theArchitectConfig } from "./the-architect/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";
