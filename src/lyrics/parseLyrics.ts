@@ -30,10 +30,10 @@ const isLabel = (text: string): boolean => {
   return SECTION_LABELS.includes(trimmed) || trimmed === "";
 };
 
-// Only treat as section label when the line starts with a known label (e.g. "(VERSE 1)", "(CHORUS)").
-// Otherwise lines like "The universe doesn't pause." would match due to "verse" in "universe".
+// Only treat as section label when the line starts with a known label (e.g. "(VERSE 1)", "(CHORUS)", "🔥 Verse 1").
+// Allow optional emoji/prefix before keyword so "🔥 Verse 1" and "🌬️ Chorus" are recognized.
 const SECTION_LABEL_PATTERN =
-  /^\s*\(?\s*(VERSE\s*\d*|PRE-CHORUS|PRE-HOOK|CHORUS|HOOK|BRIDGE|OUTRO|INTRO|FINALE)\b/i;
+  /^\s*\(?\s*(?:[^\w(]|\s)*(?:(?:FINAL\s+)?CHORUS|VERSE\s*\d*|PRE-CHORUS|PRE-HOOK|HOOK|BRIDGE|OUTRO|INTRO|FINALE)\b/i;
 
 const getSectionFromLabel = (
   label: string
