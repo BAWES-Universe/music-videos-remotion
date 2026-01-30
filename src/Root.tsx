@@ -1,6 +1,9 @@
 import "./index.css";
-import { Composition } from "remotion";
+import { Composition, staticFile } from "remotion";
+import type { CalculateMetadataFunction } from "remotion";
+import { getAudioDurationInSeconds } from "@remotion/media-utils";
 import { MusicVideo } from "./MusicVideo";
+import type { MusicVideoProps } from "./MusicVideo";
 import { heartOfWorkConfig, theFissureConfig } from "./songs";
 import type { SongConfig } from "./types/SongConfig";
 
@@ -13,6 +16,23 @@ const songs: SongConfig[] = [
   heartOfWorkConfig,
   theFissureConfig,
 ];
+
+// Auto-detect duration from audio file; fall back to config.durationSeconds if it fails
+const calculateMetadata: CalculateMetadataFunction<MusicVideoProps> = async ({
+  props,
+}) => {
+  let durationSeconds: number;
+  try {
+    durationSeconds = await getAudioDurationInSeconds(
+      staticFile(props.config.audioFile)
+    );
+  } catch {
+    durationSeconds = props.config.durationSeconds;
+  }
+  return {
+    durationInFrames: Math.ceil(durationSeconds * FPS),
+  };
+};
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -29,6 +49,7 @@ export const RemotionRoot: React.FC = () => {
           defaultProps={{
             config: song,
           }}
+          calculateMetadata={calculateMetadata}
         />
       ))}
     </>
