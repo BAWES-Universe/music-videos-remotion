@@ -61,6 +61,8 @@ export type SongConfig = {
   // Timing corrections for specific lyrics (keyed by exact lyric text)
   // Only applied to first occurrence of each lyric
   timingCorrections?: Record<string, TimingCorrection>;
+  /** Global offset in ms applied to all lyric start/end times (e.g. -3688 to show lyrics 3.7s earlier) */
+  lyricsOffsetMs?: number;
 };
 
 // Default section colors (industrial/brick theme)

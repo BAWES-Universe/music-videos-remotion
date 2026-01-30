@@ -33,7 +33,7 @@ const isLabel = (text: string): boolean => {
 // Only treat as section label when the line starts with a known label (e.g. "(VERSE 1)", "(CHORUS)").
 // Otherwise lines like "The universe doesn't pause." would match due to "verse" in "universe".
 const SECTION_LABEL_PATTERN =
-  /^\s*\(?\s*(VERSE\s*\d*|PRE-CHORUS|CHORUS|BRIDGE|OUTRO|INTRO)\b/i;
+  /^\s*\(?\s*(VERSE\s*\d*|PRE-CHORUS|PRE-HOOK|CHORUS|HOOK|BRIDGE|OUTRO|INTRO)\b/i;
 
 const getSectionFromLabel = (
   label: string
@@ -42,8 +42,8 @@ const getSectionFromLabel = (
   if (!SECTION_LABEL_PATTERN.test(trimmed)) return null;
   const upper = trimmed.toUpperCase();
   if (upper.includes("VERSE")) return "verse";
-  if (upper.includes("PRE-CHORUS")) return "pre-chorus";
-  if (upper.includes("CHORUS")) return "chorus";
+  if (upper.includes("PRE-CHORUS") || upper.includes("PRE-HOOK")) return "pre-chorus";
+  if (upper.includes("CHORUS") || upper.includes("HOOK")) return "chorus";
   if (upper.includes("BRIDGE")) return "bridge";
   if (upper.includes("OUTRO")) return "outro";
   if (upper.includes("INTRO")) return "intro";
@@ -53,7 +53,8 @@ const getSectionFromLabel = (
 // Parse SRT content with optional timing corrections
 export const parseLyricsFromSrt = (
   srtContent: string,
-  timingCorrections?: Record<string, TimingCorrection>
+  timingCorrections?: Record<string, TimingCorrection>,
+  lyricsOffsetMs?: number
 ): LyricLine[] => {
   const { captions } = parseSrt({ input: srtContent });
 
@@ -86,9 +87,11 @@ export const parseLyricsFromSrt = (
         }
         const nextLyricCaption = captions[endIdx];
         const lineEndMs = nextLyricCaption ? nextLyricCaption.startMs : caption.startMs + 3000;
+        const startMsMulti = lyricsOffsetMs != null ? caption.startMs + lyricsOffsetMs : caption.startMs;
+        const endMsMulti = lyricsOffsetMs != null ? lineEndMs + lyricsOffsetMs : lineEndMs;
         lyrics.push({
-          startMs: caption.startMs,
-          endMs: lineEndMs,
+          startMs: startMsMulti,
+          endMs: endMsMulti,
           text: lyricLine,
           section: currentSection,
         });
@@ -101,11 +104,13 @@ export const parseLyricsFromSrt = (
       continue;
     }
 
-    // Get timing correction: apply if allOccurrences, or (first chorus + first occurrence)
+    // Get timing correction: apply if allOccurrences, (first chorus + first occurrence), or first lyric in song
     const correction = timingCorrections?.[text];
     const applyCorrection =
       correction &&
-      (correction.allOccurrences || (chorusCount === 1 && isFirstOccurrence(text, lyrics)));
+      (correction.allOccurrences ||
+        (chorusCount === 1 && isFirstOccurrence(text, lyrics)) ||
+        lyrics.length === 0);
 
     // Calculate start time
     let startMs = caption.startMs;
@@ -147,9 +152,11 @@ export const parseLyricsFromSrt = (
       }
     }
 
+    const finalStartMs = lyricsOffsetMs != null ? startMs + lyricsOffsetMs : startMs;
+    const finalEndMs = lyricsOffsetMs != null ? endMs + lyricsOffsetMs : endMs;
     lyrics.push({
-      startMs,
-      endMs,
+      startMs: finalStartMs,
+      endMs: finalEndMs,
       text,
       section: currentSection,
     });

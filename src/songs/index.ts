@@ -8,6 +8,7 @@ export { reenergizeWhenISeeYouAgainConfig } from "./reenergize-when-isee-you-aga
 export { theArchitectConfig } from "./the-architect/config";
 export { orbitConfig } from "./orbit/config";
 export { brainExeConfig } from "./brain-exe/config";
+export { theUnmovedMoverConfig } from "./the-unmoved-mover/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";

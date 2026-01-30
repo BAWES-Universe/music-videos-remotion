@@ -5,7 +5,7 @@ import { getAudioDurationInSeconds } from "@remotion/media-utils";
 import { MusicVideo } from "./MusicVideo";
 import type { MusicVideoProps } from "./MusicVideo";
 import { parseLyricsFromSrt } from "./lyrics/parseLyrics";
-import { heartOfWorkConfig, theFissureConfig, stillnessWeaponizedConfig, pressureButIDontBreakConfig, whenGiantsWakeConfig, reenergizeWhenISeeYouAgainConfig, theArchitectConfig, orbitConfig, brainExeConfig } from "./songs";
+import { heartOfWorkConfig, theFissureConfig, stillnessWeaponizedConfig, pressureButIDontBreakConfig, whenGiantsWakeConfig, reenergizeWhenISeeYouAgainConfig, theArchitectConfig, orbitConfig, brainExeConfig, theUnmovedMoverConfig } from "./songs";
 import type { SongConfig } from "./types/SongConfig";
 
 const MIN_TITLE_SECONDS = 3;
@@ -25,6 +25,7 @@ const songs: SongConfig[] = [
   theArchitectConfig,
   orbitConfig,
   brainExeConfig,
+  theUnmovedMoverConfig,
 ];
 
 // Auto-detect duration; when first lyric is before MIN_TITLE_SECONDS, push music and add intro
@@ -44,7 +45,7 @@ const calculateMetadata: CalculateMetadataFunction<MusicVideoProps> = async ({
   try {
     const srtRes = await fetch(staticFile(props.config.srtFile));
     const srtContent = await srtRes.text();
-    const lyrics = parseLyricsFromSrt(srtContent, props.config.timingCorrections);
+    const lyrics = parseLyricsFromSrt(srtContent, props.config.timingCorrections, props.config.lyricsOffsetMs);
     const firstLyricStartSec = lyrics.length > 0 ? lyrics[0].startMs / 1000 : MIN_TITLE_SECONDS;
     if (firstLyricStartSec < MIN_TITLE_SECONDS) {
       introOffsetSeconds = MIN_TITLE_SECONDS;

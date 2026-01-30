@@ -67,7 +67,7 @@ export const MusicVideo: React.FC<MusicVideoProps> = ({ config, introOffsetSecon
     try {
       const response = await fetch(staticFile(config.srtFile));
       const srtContent = await response.text();
-      const parsedLyrics = parseLyricsFromSrt(srtContent, config.timingCorrections);
+      const parsedLyrics = parseLyricsFromSrt(srtContent, config.timingCorrections, config.lyricsOffsetMs);
       const groupedSections = groupLyricsBySection(parsedLyrics);
 
       setLyrics(parsedLyrics);
@@ -76,7 +76,7 @@ export const MusicVideo: React.FC<MusicVideoProps> = ({ config, introOffsetSecon
     } catch (e) {
       cancelRender(e);
     }
-  }, [config.srtFile, config.timingCorrections, handle]);
+  }, [config.srtFile, config.timingCorrections, config.lyricsOffsetMs, handle]);
 
   useEffect(() => {
     loadLyrics();
