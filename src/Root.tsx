@@ -4,8 +4,11 @@ import type { CalculateMetadataFunction } from "remotion";
 import { getAudioDurationInSeconds } from "@remotion/media-utils";
 import { MusicVideo } from "./MusicVideo";
 import type { MusicVideoProps } from "./MusicVideo";
-import { heartOfWorkConfig, theFissureConfig, stillnessWeaponizedConfig, pressureButIDontBreakConfig, whenGiantsWakeConfig, reenergizeWhenISeeYouAgainConfig, theArchitectConfig } from "./songs";
+import { parseLyricsFromSrt } from "./lyrics/parseLyrics";
+import { heartOfWorkConfig, theFissureConfig, stillnessWeaponizedConfig, pressureButIDontBreakConfig, whenGiantsWakeConfig, reenergizeWhenISeeYouAgainConfig, theArchitectConfig, orbitConfig } from "./songs";
 import type { SongConfig } from "./types/SongConfig";
+
+const MIN_TITLE_SECONDS = 3;
 
 const FPS = 30;
 const WIDTH = 3840;
@@ -20,9 +23,10 @@ const songs: SongConfig[] = [
   whenGiantsWakeConfig,
   reenergizeWhenISeeYouAgainConfig,
   theArchitectConfig,
+  orbitConfig,
 ];
 
-// Auto-detect duration from audio file; fall back to config.durationSeconds if it fails
+// Auto-detect duration; when first lyric is before MIN_TITLE_SECONDS, push music and add intro
 const calculateMetadata: CalculateMetadataFunction<MusicVideoProps> = async ({
   props,
 }) => {
@@ -34,8 +38,27 @@ const calculateMetadata: CalculateMetadataFunction<MusicVideoProps> = async ({
   } catch {
     durationSeconds = props.config.durationSeconds;
   }
+
+  let introOffsetSeconds = 0;
+  try {
+    const srtRes = await fetch(staticFile(props.config.srtFile));
+    const srtContent = await srtRes.text();
+    const lyrics = parseLyricsFromSrt(srtContent, props.config.timingCorrections);
+    const firstLyricStartSec = lyrics.length > 0 ? lyrics[0].startMs / 1000 : MIN_TITLE_SECONDS;
+    if (firstLyricStartSec < MIN_TITLE_SECONDS) {
+      introOffsetSeconds = MIN_TITLE_SECONDS;
+      durationSeconds += introOffsetSeconds;
+    }
+  } catch {
+    // If SRT fetch/parse fails, no push
+  }
+
   return {
     durationInFrames: Math.ceil(durationSeconds * FPS),
+    props: {
+      ...props,
+      introOffsetSeconds: introOffsetSeconds > 0 ? introOffsetSeconds : undefined,
+    },
   };
 };
 

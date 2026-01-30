@@ -30,6 +30,8 @@ import {
 
 export type MusicVideoProps = {
   config: SongConfig;
+  /** When set, title shows this many seconds with no overlap; audio/lyrics start after. */
+  introOffsetSeconds?: number;
 };
 
 // Get current section based on frame/time
@@ -46,9 +48,12 @@ const getCurrentSection = (
 };
 
 // Main music video component - config-driven
-export const MusicVideo: React.FC<MusicVideoProps> = ({ config }) => {
+export const MusicVideo: React.FC<MusicVideoProps> = ({ config, introOffsetSeconds = 0 }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
+
+  // When first lyric starts before 3s, we push music/lyrics by this many frames (title only, no overlap)
+  const offsetFrames = introOffsetSeconds > 0 ? Math.ceil(introOffsetSeconds * fps) : 0;
 
   const [handle] = useState(() => delayRender("Loading lyrics"));
   const [lyrics, setLyrics] = useState<LyricLine[]>([]);
@@ -77,16 +82,20 @@ export const MusicVideo: React.FC<MusicVideoProps> = ({ config }) => {
     loadLyrics();
   }, [loadLyrics]);
 
-  // Current time in milliseconds
-  const currentTimeMs = (frame / fps) * 1000;
+  // Current time in milliseconds (logical time in the song; before offset = intro)
+  const currentTimeMs =
+    offsetFrames > 0 && frame < offsetFrames
+      ? 0
+      : ((Math.max(0, frame - offsetFrames) / fps) * 1000);
 
   // Get current section for background
   const currentSection = getCurrentSection(sections, currentTimeMs);
 
-  // Calculate section progress (0-1)
+  // Calculate section progress (0-1); when pushed, song end is earlier than video end
+  const songEndMs = (durationInFrames - offsetFrames) * (1000 / fps);
   const currentSectionData = sections.find((s) => {
     const nextSection = sections[sections.indexOf(s) + 1];
-    const endTime = nextSection ? nextSection.startMs : durationInFrames * (1000 / fps);
+    const endTime = nextSection ? nextSection.startMs : Math.max(0, songEndMs);
     return currentTimeMs >= s.startMs && currentTimeMs < endTime;
   });
   const sectionProgress = currentSectionData
@@ -94,16 +103,20 @@ export const MusicVideo: React.FC<MusicVideoProps> = ({ config }) => {
       (currentSectionData.endMs - currentSectionData.startMs)
     : 0;
 
-  // Intro duration (before first lyric)
-  const introEndFrame = lyrics.length > 0 ? Math.floor((lyrics[0].startMs / 1000) * fps) : 60;
+  // Title: show for offset (pushed intro) or until first lyric when no push
+  const firstLyricStartFrame = lyrics.length > 0 ? Math.floor((lyrics[0].startMs / 1000) * fps) : 90;
+  const titleDurationFrames =
+    offsetFrames > 0 ? offsetFrames : firstLyricStartFrame;
 
   // Get particle color for current section
   const particleColor = getParticleColors(config, currentSection);
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#000" }}>
-      {/* Audio track */}
-      <Audio src={staticFile(config.audioFile)} />
+      {/* Audio track: when pushed, delay start until after title (Sequence delays playback) */}
+      <Sequence from={offsetFrames} durationInFrames={durationInFrames - offsetFrames}>
+        <Audio src={staticFile(config.audioFile)} />
+      </Sequence>
 
       {/* Animated background based on current section */}
       <AnimatedBackground
@@ -129,15 +142,15 @@ export const MusicVideo: React.FC<MusicVideoProps> = ({ config }) => {
         />
       )}
 
-      {/* Title sequence during intro */}
-      <Sequence from={0} durationInFrames={Math.min(introEndFrame, 90)} premountFor={30}>
+      {/* Title sequence: show at least 3 seconds, or until first lyric if intro is longer */}
+      <Sequence from={0} durationInFrames={titleDurationFrames} premountFor={30}>
         <TitleDisplay title={config.title} subtitle={config.subtitle} />
       </Sequence>
 
-      {/* Render each lyric line */}
+      {/* Render each lyric line (offset when title is pushed) */}
       {lyrics.map((line, index) => {
-        const startFrame = Math.floor((line.startMs / 1000) * fps);
-        const endFrame = Math.floor((line.endMs / 1000) * fps);
+        const startFrame = offsetFrames + Math.floor((line.startMs / 1000) * fps);
+        const endFrame = offsetFrames + Math.floor((line.endMs / 1000) * fps);
         const duration = endFrame - startFrame;
 
         // Skip if duration is too short
@@ -155,11 +168,11 @@ export const MusicVideo: React.FC<MusicVideoProps> = ({ config }) => {
         );
       })}
 
-      {/* Particle bursts at chorus starts */}
+      {/* Particle bursts at chorus starts (offset when title is pushed) */}
       {sections
         .filter((s) => s.section === "chorus")
         .map((section, index) => {
-          const burstFrame = Math.floor((section.startMs / 1000) * fps);
+          const burstFrame = offsetFrames + Math.floor((section.startMs / 1000) * fps);
           return (
             <Sequence
               key={`burst-${index}`}

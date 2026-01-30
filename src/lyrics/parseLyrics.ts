@@ -30,10 +30,17 @@ const isLabel = (text: string): boolean => {
   return SECTION_LABELS.includes(trimmed) || trimmed === "";
 };
 
+// Only treat as section label when the line starts with a known label (e.g. "(VERSE 1)", "(CHORUS)").
+// Otherwise lines like "The universe doesn't pause." would match due to "verse" in "universe".
+const SECTION_LABEL_PATTERN =
+  /^\s*\(?\s*(VERSE\s*\d*|PRE-CHORUS|CHORUS|BRIDGE|OUTRO|INTRO)\b/i;
+
 const getSectionFromLabel = (
   label: string
 ): LyricLine["section"] | null => {
-  const upper = label.toUpperCase();
+  const trimmed = label.trim();
+  if (!SECTION_LABEL_PATTERN.test(trimmed)) return null;
+  const upper = trimmed.toUpperCase();
   if (upper.includes("VERSE")) return "verse";
   if (upper.includes("PRE-CHORUS")) return "pre-chorus";
   if (upper.includes("CHORUS")) return "chorus";
