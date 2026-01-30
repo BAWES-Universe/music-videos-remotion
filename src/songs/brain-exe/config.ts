@@ -6,9 +6,9 @@ export const brainExeConfig: SongConfig = {
   title: "Brain.exe",
   subtitle: "I'm the glitch you can't delete",
 
-  // Files (public folder: brain.exe)
-  audioFile: "brain.exe/audio.mp3",
-  srtFile: "brain.exe/lyrics.srt",
+  // Files (public folder: brain-exe)
+  audioFile: "brain-exe/audio.mp3",
+  srtFile: "brain-exe/lyrics.srt",
 
   // Fallback duration (auto-detected from audio via calculateMetadata)
   durationSeconds: 120,

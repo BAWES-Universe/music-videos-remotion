@@ -131,15 +131,17 @@ export const MusicVideo: React.FC<MusicVideoProps> = ({ config, introOffsetSecon
         color={particleColor}
       />
 
-      {/* Audio visualization (if enabled) */}
+      {/* Audio visualization: mount after frame 0 so "Extracting audio for frame 0" doesn't block the first frame (avoids render timeout) */}
       {config.visualization && config.visualization.style !== "none" && (
-        <AudioVisualizer
-          audioSrc={config.audioFile}
-          style={config.visualization.style}
-          primaryColor={config.visualization.primaryColor ?? sectionColors[currentSection].accent}
-          secondaryColor={config.visualization.secondaryColor ?? sectionColors.chorus.accent}
-          opacity={config.visualization.opacity ?? 0.8}
-        />
+        <Sequence from={offsetFrames || 1} durationInFrames={Math.max(1, durationInFrames - (offsetFrames || 1))}>
+          <AudioVisualizer
+            audioSrc={config.audioFile}
+            style={config.visualization.style}
+            primaryColor={config.visualization.primaryColor ?? sectionColors[currentSection].accent}
+            secondaryColor={config.visualization.secondaryColor ?? sectionColors.chorus.accent}
+            opacity={config.visualization.opacity ?? 0.8}
+          />
+        </Sequence>
       )}
 
       {/* Title sequence: show at least 3 seconds, or until first lyric if intro is longer */}
