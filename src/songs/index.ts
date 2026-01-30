@@ -7,6 +7,7 @@ export { whenGiantsWakeConfig } from "./when-giants-wake/config";
 export { reenergizeWhenISeeYouAgainConfig } from "./reenergize-when-isee-you-again/config";
 export { theArchitectConfig } from "./the-architect/config";
 export { orbitConfig } from "./orbit/config";
+export { brainExeConfig } from "./brain-exe/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";
