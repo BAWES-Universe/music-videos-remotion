@@ -1,7 +1,7 @@
 import "./index.css";
 import { Composition } from "remotion";
 import { MusicVideo } from "./MusicVideo";
-import { heartOfWorkConfig } from "./songs";
+import { heartOfWorkConfig, theFissureConfig } from "./songs";
 import type { SongConfig } from "./types/SongConfig";
 
 const FPS = 30;
@@ -11,8 +11,7 @@ const HEIGHT = 2160;
 // All songs to register as compositions
 const songs: SongConfig[] = [
   heartOfWorkConfig,
-  // Add more songs here:
-  // anotherSongConfig,
+  theFissureConfig,
 ];
 
 export const RemotionRoot: React.FC = () => {
