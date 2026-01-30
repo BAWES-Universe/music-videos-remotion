@@ -9,6 +9,7 @@ export { theArchitectConfig } from "./the-architect/config";
 export { orbitConfig } from "./orbit/config";
 export { brainExeConfig } from "./brain-exe/config";
 export { theUnmovedMoverConfig } from "./the-unmoved-mover/config";
+export { lightspeedConfig } from "./lightspeed/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";

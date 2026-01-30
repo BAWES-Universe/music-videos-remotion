@@ -5,7 +5,7 @@ import { getAudioDurationInSeconds } from "@remotion/media-utils";
 import { MusicVideo } from "./MusicVideo";
 import type { MusicVideoProps } from "./MusicVideo";
 import { parseLyricsFromSrt } from "./lyrics/parseLyrics";
-import { heartOfWorkConfig, theFissureConfig, stillnessWeaponizedConfig, pressureButIDontBreakConfig, whenGiantsWakeConfig, reenergizeWhenISeeYouAgainConfig, theArchitectConfig, orbitConfig, brainExeConfig, theUnmovedMoverConfig } from "./songs";
+import { heartOfWorkConfig, theFissureConfig, stillnessWeaponizedConfig, pressureButIDontBreakConfig, whenGiantsWakeConfig, reenergizeWhenISeeYouAgainConfig, theArchitectConfig, orbitConfig, brainExeConfig, theUnmovedMoverConfig, lightspeedConfig } from "./songs";
 import type { SongConfig } from "./types/SongConfig";
 
 const MIN_TITLE_SECONDS = 3;
@@ -26,6 +26,7 @@ const songs: SongConfig[] = [
   orbitConfig,
   brainExeConfig,
   theUnmovedMoverConfig,
+  lightspeedConfig,
 ];
 
 // Auto-detect duration; when first lyric is before MIN_TITLE_SECONDS, push music and add intro

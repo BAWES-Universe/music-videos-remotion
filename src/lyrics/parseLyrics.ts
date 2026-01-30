@@ -33,7 +33,7 @@ const isLabel = (text: string): boolean => {
 // Only treat as section label when the line starts with a known label (e.g. "(VERSE 1)", "(CHORUS)").
 // Otherwise lines like "The universe doesn't pause." would match due to "verse" in "universe".
 const SECTION_LABEL_PATTERN =
-  /^\s*\(?\s*(VERSE\s*\d*|PRE-CHORUS|PRE-HOOK|CHORUS|HOOK|BRIDGE|OUTRO|INTRO)\b/i;
+  /^\s*\(?\s*(VERSE\s*\d*|PRE-CHORUS|PRE-HOOK|CHORUS|HOOK|BRIDGE|OUTRO|INTRO|FINALE)\b/i;
 
 const getSectionFromLabel = (
   label: string
@@ -45,7 +45,7 @@ const getSectionFromLabel = (
   if (upper.includes("PRE-CHORUS") || upper.includes("PRE-HOOK")) return "pre-chorus";
   if (upper.includes("CHORUS") || upper.includes("HOOK")) return "chorus";
   if (upper.includes("BRIDGE")) return "bridge";
-  if (upper.includes("OUTRO")) return "outro";
+  if (upper.includes("OUTRO") || upper.includes("FINALE")) return "outro";
   if (upper.includes("INTRO")) return "intro";
   return null;
 };
