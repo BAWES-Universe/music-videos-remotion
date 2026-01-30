@@ -10,8 +10,8 @@ export const theFissureConfig: SongConfig = {
   audioFile: "the-fissure/audio.mp3",
   srtFile: "the-fissure/lyrics.srt",
 
-  // Duration: ~1:16 (add a bit of buffer)
-  durationSeconds: 78,
+  // Duration: 1:34
+  durationSeconds: 60 + 34,
 
   // Visual theme - cold steel, fracture aesthetic
   theme: {
