@@ -4,7 +4,7 @@ import type { CalculateMetadataFunction } from "remotion";
 import { getAudioDurationInSeconds } from "@remotion/media-utils";
 import { MusicVideo } from "./MusicVideo";
 import type { MusicVideoProps } from "./MusicVideo";
-import { heartOfWorkConfig, theFissureConfig, stillnessWeaponizedConfig, pressureButIDontBreakConfig } from "./songs";
+import { heartOfWorkConfig, theFissureConfig, stillnessWeaponizedConfig, pressureButIDontBreakConfig, whenGiantsWakeConfig } from "./songs";
 import type { SongConfig } from "./types/SongConfig";
 
 const FPS = 30;
@@ -17,6 +17,7 @@ const songs: SongConfig[] = [
   theFissureConfig,
   stillnessWeaponizedConfig,
   pressureButIDontBreakConfig,
+  whenGiantsWakeConfig,
 ];
 
 // Auto-detect duration from audio file; fall back to config.durationSeconds if it fails
