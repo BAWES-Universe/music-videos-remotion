@@ -156,9 +156,10 @@ export const MusicVideo: React.FC<MusicVideoProps> = ({ config, introOffsetSecon
         // Skip if duration is too short
         if (duration < 5) return null;
 
+        // Unique key so duplicate text at different times (e.g. repeated "In orbit —") never reuses the wrong instance
         return (
           <Sequence
-            key={index}
+            key={`lyric-${index}-${line.startMs}`}
             from={startFrame}
             durationInFrames={duration}
             premountFor={15}

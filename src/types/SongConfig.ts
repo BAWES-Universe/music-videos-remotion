@@ -4,9 +4,10 @@ export type Section = LyricLine["section"];
 
 // Timing correction for a specific lyric line
 export type TimingCorrection = {
-  startMs?: number;      // Absolute start time in ms
-  startOffset?: number;  // Offset to add to SRT start time
-  duration?: number;     // Fixed duration in ms
+  startMs?: number;       // Absolute start time in ms
+  startOffset?: number;   // Offset to add to SRT start time
+  duration?: number;      // Fixed duration in ms
+  allOccurrences?: boolean; // If true, apply to every occurrence (pre-chorus, chorus, etc.); otherwise first chorus only
 };
 
 // Color palette for visual theme

@@ -1,4 +1,4 @@
-import { parseSrt, Caption } from "@remotion/captions";
+import { parseSrt } from "@remotion/captions";
 import type { TimingCorrection } from "../types/SongConfig";
 
 export type LyricLine = {
@@ -65,12 +65,33 @@ export const parseLyricsFromSrt = (
     const caption = captions[i];
     const text = caption.text.trim();
 
-    // Check if this is a section label
+    // Check if this is a section label (or caption contains one)
     const sectionMatch = getSectionFromLabel(text);
     if (sectionMatch) {
       currentSection = sectionMatch;
       if (sectionMatch === "chorus") {
         chorusCount++;
+      }
+      // If caption has multiple lines, one may be a lyric (e.g. "(PRE-CHORUS)\nIn orbit —")
+      const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+      const lyricLine = lines.find((l) => !getSectionFromLabel(l) && !isLabel(l));
+      if (lyricLine && lines.length > 1) {
+        // Push the lyric with this caption's timing; endMs will be set below
+        const nextIdx = i + 1;
+        let endIdx = nextIdx;
+        while (endIdx < captions.length) {
+          const nextText = captions[endIdx].text.trim();
+          if (!getSectionFromLabel(nextText) && !isLabel(nextText)) break;
+          endIdx++;
+        }
+        const nextLyricCaption = captions[endIdx];
+        const lineEndMs = nextLyricCaption ? nextLyricCaption.startMs : caption.startMs + 3000;
+        lyrics.push({
+          startMs: caption.startMs,
+          endMs: lineEndMs,
+          text: lyricLine,
+          section: currentSection,
+        });
       }
       continue;
     }
@@ -80,13 +101,25 @@ export const parseLyricsFromSrt = (
       continue;
     }
 
-    // Get timing correction if available (only for first chorus, first occurrence)
+    // Get timing correction: apply if allOccurrences, or (first chorus + first occurrence)
     const correction = timingCorrections?.[text];
-    const applyCorrection = correction && chorusCount === 1 && isFirstOccurrence(text, lyrics);
+    const applyCorrection =
+      correction &&
+      (correction.allOccurrences || (chorusCount === 1 && isFirstOccurrence(text, lyrics)));
 
-    // Calculate start time: use absolute startMs if set, else apply startOffset
+    // Calculate start time
     let startMs = caption.startMs;
-    if (applyCorrection && correction) {
+    // If previous caption had a shortened duration (e.g. "In orbit —" 900ms), pull this line forward so it starts when that one ends (no pause)
+    const prevCaption = i > 0 ? captions[i - 1] : null;
+    const prevText = prevCaption?.text.trim();
+    const prevCorrection = prevText ? timingCorrections?.[prevText] : undefined;
+    if (
+      prevCaption &&
+      prevCorrection?.duration !== undefined &&
+      prevCorrection?.allOccurrences
+    ) {
+      startMs = prevCaption.startMs + prevCorrection.duration;
+    } else if (applyCorrection && correction) {
       if (correction.startMs !== undefined) {
         startMs = correction.startMs;
       } else if (correction.startOffset) {
@@ -94,14 +127,21 @@ export const parseLyricsFromSrt = (
       }
     }
 
-    // Calculate end time
+    // End time: next caption's start so we switch to the next line when it starts (no overlap, no stuck previous line)
     let endMs: number;
     if (applyCorrection && correction.duration) {
       endMs = startMs + correction.duration;
     } else {
-      const nextCaption = captions[i + 1];
-      endMs = nextCaption ? nextCaption.startMs : caption.startMs + 3000;
-      // Apply same offset to end if we shifted start
+      const immediateNext = captions[i + 1];
+      const nextIsSectionLabel =
+        immediateNext && (getSectionFromLabel(immediateNext.text.trim()) !== null || isLabel(immediateNext.text.trim()));
+      if (nextIsSectionLabel) {
+        // Next is (VERSE 2) etc.: use this line's SRT end so we don't stretch until "I see hands"
+        endMs = caption.endMs ?? caption.startMs + 3000;
+      } else {
+        // Next is a lyric: end when it starts so "far enough to still breathe" appears when sung, not "close enough..."
+        endMs = immediateNext ? immediateNext.startMs : caption.startMs + 3000;
+      }
       if (applyCorrection && correction.startOffset) {
         endMs += correction.startOffset;
       }

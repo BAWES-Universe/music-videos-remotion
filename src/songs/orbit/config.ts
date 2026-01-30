@@ -55,5 +55,8 @@ export const orbitConfig: SongConfig = {
     opacity: 0.65,
   },
 
-  timingCorrections: {},
+  // "In orbit —" in all sections: shorter display so we move on to next line sooner
+  timingCorrections: {
+    "In orbit —": { duration: 900, allOccurrences: true },
+  },
 };
