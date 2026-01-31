@@ -111,12 +111,22 @@ export const MusicVideo: React.FC<MusicVideoProps> = ({ config, introOffsetSecon
   // Get particle color for current section
   const particleColor = getParticleColors(config, currentSection);
 
+  // Don't mount Audio or AudioVisualizer on frame 0 — they trigger "Extracting audio for frame 0" which can hang. Only mount from frame 1 so frame 0 renders without any audio extraction.
+  const audioStartFrame = offsetFrames || 1;
+  const mountAudio = frame >= audioStartFrame;
+
   return (
     <AbsoluteFill style={{ backgroundColor: "#000" }}>
-      {/* Audio track: when pushed, delay start until after title (Sequence delays playback) */}
-      <Sequence from={offsetFrames} durationInFrames={durationInFrames - offsetFrames}>
-        <Audio src={staticFile(config.audioFile)} />
-      </Sequence>
+      {/* Audio: only in tree when frame >= audioStartFrame so frame 0 never runs audio extraction. Give extraction more time so slow decodes don't timeout. */}
+      {mountAudio && (
+        <Sequence from={audioStartFrame} durationInFrames={durationInFrames - audioStartFrame}>
+          <Audio
+            src={staticFile(config.audioFile)}
+            delayRenderTimeoutInMilliseconds={120000}
+            delayRenderRetries={2}
+          />
+        </Sequence>
+      )}
 
       {/* Animated background based on current section */}
       <AnimatedBackground
@@ -131,9 +141,9 @@ export const MusicVideo: React.FC<MusicVideoProps> = ({ config, introOffsetSecon
         color={particleColor}
       />
 
-      {/* Audio visualization: mount after frame 0 so "Extracting audio for frame 0" doesn't block the first frame (avoids render timeout) */}
-      {config.visualization && config.visualization.style !== "none" && (
-        <Sequence from={offsetFrames || 1} durationInFrames={Math.max(1, durationInFrames - (offsetFrames || 1))}>
+      {/* Audio visualization: same — only mount when frame >= audioStartFrame */}
+      {mountAudio && config.visualization && config.visualization.style !== "none" && (
+        <Sequence from={audioStartFrame} durationInFrames={Math.max(1, durationInFrames - audioStartFrame)}>
           <AudioVisualizer
             audioSrc={config.audioFile}
             style={config.visualization.style}

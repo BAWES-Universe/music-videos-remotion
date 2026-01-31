@@ -30,7 +30,7 @@
   "scripts": {
     "dev": "remotion studio",
     "build": "remotion bundle",
-    "render": "remotion render --timeout=120000",
+    "render": "remotion render --timeout=180000",
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc"
   },
