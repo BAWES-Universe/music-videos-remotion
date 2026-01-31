@@ -17,6 +17,7 @@ export { cantStopMeConfig } from "./cant-stop-me/config";
 export { crownOfLightConfig } from "./crown-of-light/config";
 export { throneOfThunderConfig } from "./throne-of-thunder/config";
 export { mirrorGardenMugenConfig } from "./mirror-garden-mugen/config";
+export { priceOfLoveConfig } from "./price-of-love/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";
