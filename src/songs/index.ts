@@ -14,6 +14,7 @@ export { walkingThroughFireConfig } from "./walking-through-fire/config";
 export { theyNeverFeltItMoveConfig } from "./they-never-felt-it-move/config";
 export { gravityWontHoldMeConfig } from "./gravity-wont-holdme/config";
 export { cantStopMeConfig } from "./cant-stop-me/config";
+export { crownOfLightConfig } from "./crown-of-light/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";
