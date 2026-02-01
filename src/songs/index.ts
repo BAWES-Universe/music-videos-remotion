@@ -21,6 +21,7 @@ export { priceOfLoveConfig } from "./price-of-love/config";
 export { noSabesNadaConfig } from "./no-sabes-nada/config";
 export { runaDeFuegoConfig } from "./runa-de-fuego/config";
 export { froggyFrogConfig } from "./froggy-frog/config";
+export { humanAmongUsConfig } from "./human-among-us/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";
