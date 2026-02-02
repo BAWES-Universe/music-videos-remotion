@@ -25,6 +25,7 @@ export { humanAmongUsConfig } from "./human-among-us/config";
 export { ashesToAnthemsConfig } from "./ashes-to-anthems/config";
 export { blueprintsAndBricksConfig } from "./blueprints-and-bricks/config";
 export { theStickThatEatsSnakesConfig } from "./the-stick-that-eats-snakes/config";
+export { stickyStickConfig } from "./sticky-stick/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";
