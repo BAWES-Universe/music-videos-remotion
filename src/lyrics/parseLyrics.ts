@@ -144,8 +144,8 @@ export const parseLyricsFromSrt = (
         // Next is (VERSE 2) etc.: use this line's SRT end so we don't stretch until "I see hands"
         endMs = caption.endMs ?? caption.startMs + 3000;
       } else {
-        // Next is a lyric: end when it starts so "far enough to still breathe" appears when sung, not "close enough..."
-        endMs = immediateNext ? immediateNext.startMs : caption.startMs + 3000;
+        // Use SRT end time when set (allows gaps before next lyric); else end when next starts
+        endMs = caption.endMs ?? (immediateNext ? immediateNext.startMs : caption.startMs + 3000);
       }
       if (applyCorrection && correction.startOffset) {
         endMs += correction.startOffset;
