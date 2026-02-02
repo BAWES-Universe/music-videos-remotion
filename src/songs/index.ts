@@ -27,6 +27,7 @@ export { blueprintsAndBricksConfig } from "./blueprints-and-bricks/config";
 export { theStickThatEatsSnakesConfig } from "./the-stick-that-eats-snakes/config";
 export { stickyStickConfig } from "./sticky-stick/config";
 export { razorWireConfig } from "./razor-wire/config";
+export { gardenOfEchoesConfig } from "./garden-of-echoes/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";
