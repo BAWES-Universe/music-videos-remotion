@@ -26,6 +26,7 @@ export { ashesToAnthemsConfig } from "./ashes-to-anthems/config";
 export { blueprintsAndBricksConfig } from "./blueprints-and-bricks/config";
 export { theStickThatEatsSnakesConfig } from "./the-stick-that-eats-snakes/config";
 export { stickyStickConfig } from "./sticky-stick/config";
+export { razorWireConfig } from "./razor-wire/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";
