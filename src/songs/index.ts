@@ -29,6 +29,7 @@ export { stickyStickConfig } from "./sticky-stick/config";
 export { razorWireConfig } from "./razor-wire/config";
 export { gardenOfEchoesConfig } from "./garden-of-echoes/config";
 export { neonOrbitConfig } from "./neon-orbit/config";
+export { zeroRiseConfig } from "./zero-rise/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";
