@@ -31,6 +31,7 @@ export { gardenOfEchoesConfig } from "./garden-of-echoes/config";
 export { neonOrbitConfig } from "./neon-orbit/config";
 export { zeroRiseConfig } from "./zero-rise/config";
 export { infiniteResponsibilityConfig } from "./infinite-responsibility/config";
+export { whatWeDoinConfig } from "./what-we-doin/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";
