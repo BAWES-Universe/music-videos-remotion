@@ -68,4 +68,7 @@ export const whatWeDoinConfig: SongConfig = {
   },
 
   timingCorrections: {},
+
+  // Extra particle burst during solo (01:08.15)
+  particleBurstTimesMs: [68_150],
 };

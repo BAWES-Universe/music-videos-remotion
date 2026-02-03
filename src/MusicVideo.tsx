@@ -188,7 +188,7 @@ export const MusicVideo: React.FC<MusicVideoProps> = ({ config, introOffsetSecon
           const burstFrame = offsetFrames + Math.floor((section.startMs / 1000) * fps);
           return (
             <Sequence
-              key={`burst-${index}`}
+              key={`burst-chorus-${index}`}
               from={burstFrame}
               durationInFrames={60}
               premountFor={5}
@@ -197,6 +197,23 @@ export const MusicVideo: React.FC<MusicVideoProps> = ({ config, introOffsetSecon
             </Sequence>
           );
         })}
+      {/* Extra particle bursts at configurable times (e.g. solo) */}
+      {(config.particleBurstTimesMs ?? []).map((timeMs, index) => {
+        const burstFrame = offsetFrames + Math.floor((timeMs / 1000) * fps);
+        return (
+          <Sequence
+            key={`burst-extra-${index}`}
+            from={burstFrame}
+            durationInFrames={60}
+            premountFor={5}
+          >
+            <ParticleBurst
+              triggerFrame={0}
+              color={getParticleColors(config, "verse")}
+            />
+          </Sequence>
+        );
+      })}
     </AbsoluteFill>
   );
 };

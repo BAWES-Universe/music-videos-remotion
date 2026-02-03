@@ -63,6 +63,8 @@ export type SongConfig = {
   timingCorrections?: Record<string, TimingCorrection>;
   /** Global offset in ms applied to all lyric start/end times (e.g. -3688 to show lyrics 3.7s earlier) */
   lyricsOffsetMs?: number;
+  /** Extra particle burst timestamps in ms (e.g. solo hits). Same effect as chorus bursts. */
+  particleBurstTimesMs?: number[];
 };
 
 // Default section colors (industrial/brick theme)
