@@ -33,6 +33,7 @@ export { zeroRiseConfig } from "./zero-rise/config";
 export { infiniteResponsibilityConfig } from "./infinite-responsibility/config";
 export { whatWeDoinConfig } from "./what-we-doin/config";
 export { burnTheQuietConfig } from "./burn-the-quiet/config";
+export { upwardPressureConfig } from "./upward-pressure/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";
