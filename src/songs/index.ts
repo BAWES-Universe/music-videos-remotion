@@ -35,6 +35,7 @@ export { whatWeDoinConfig } from "./what-we-doin/config";
 export { burnTheQuietConfig } from "./burn-the-quiet/config";
 export { upwardPressureConfig } from "./upward-pressure/config";
 export { runItUpConfig } from "./run-it-up/config";
+export { swayLikeFireConfig } from "./sway-like-fire/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";
