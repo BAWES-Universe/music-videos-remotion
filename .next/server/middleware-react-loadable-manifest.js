@@ -1,0 +1,1 @@
+self.__REACT_LOADABLE_MANIFEST="{\"app/watch/[id]/WatchClient.tsx -> ./VideoPlayer\":{\"id\":\"app/watch/[id]/WatchClient.tsx -> ./VideoPlayer\",\"files\":[\"static/chunks/_app-pages-browser_app_watch_id_VideoPlayer_tsx.js\"]}}"

@@ -12,6 +12,7 @@ export const runItUpConfig: SongConfig = {
 
   // Fallback duration (auto-detected from audio via calculateMetadata)
   durationSeconds: 165,
+  introOffsetSeconds: 3,
 
   // Visual theme — green/emerald, "run it up" / money / climb, distinct from other songs
   theme: {

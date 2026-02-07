@@ -2,14 +2,40 @@
   "compilerOptions": {
     "target": "ES2018",
     "module": "commonjs",
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "strict": true,
     "noEmit": true,
-    "lib": ["es2015"],
+    "lib": [
+      "es2015"
+    ],
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "allowJs": true,
+    "incremental": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "exclude": ["remotion.config.ts"]
+  "include": [
+    "app/**/*",
+    "src/**/*",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "remotion.config.ts",
+    "node_modules"
+  ]
 }

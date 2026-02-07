@@ -17,7 +17,9 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "remotion": "4.0.411",
-    "tailwindcss": "4.0.0"
+    "tailwindcss": "4.0.0",
+    "next": "15.0.3",
+    "@remotion/player": "4.0.411"
   },
   "devDependencies": {
     "@remotion/eslint-config-flat": "4.0.411",
@@ -29,7 +31,9 @@
   },
   "scripts": {
     "dev": "remotion studio",
+    "dev:site": "next dev",
     "build": "remotion bundle",
+    "build:site": "next build",
     "render": "remotion render --timeout=180000",
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc"

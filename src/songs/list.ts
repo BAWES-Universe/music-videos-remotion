@@ -1,0 +1,47 @@
+import type { SongConfig } from "../types/SongConfig";
+import { heartOfWorkConfig, theFissureConfig, stillnessWeaponizedConfig, pressureButIDontBreakConfig, whenGiantsWakeConfig, reenergizeWhenISeeYouAgainConfig, theArchitectConfig, orbitConfig, brainExeConfig, theUnmovedMoverConfig, lightspeedConfig, walkingThroughFireConfig, theyNeverFeltItMoveConfig, gravityWontHoldMeConfig, cantStopMeConfig, crownOfLightConfig, throneOfThunderConfig, mirrorGardenMugenConfig, priceOfLoveConfig, noSabesNadaConfig, runaDeFuegoConfig, froggyFrogConfig, humanAmongUsConfig, ashesToAnthemsConfig, blueprintsAndBricksConfig, theStickThatEatsSnakesConfig, stickyStickConfig, razorWireConfig, gardenOfEchoesConfig, neonOrbitConfig, zeroRiseConfig, infiniteResponsibilityConfig, whatWeDoinConfig, burnTheQuietConfig, upwardPressureConfig, runItUpConfig, swayLikeFireConfig, mouthFullOfClocksConfig } from "./index";
+
+export const songs: SongConfig[] = [
+  heartOfWorkConfig,
+  theFissureConfig,
+  stillnessWeaponizedConfig,
+  pressureButIDontBreakConfig,
+  whenGiantsWakeConfig,
+  reenergizeWhenISeeYouAgainConfig,
+  theArchitectConfig,
+  orbitConfig,
+  brainExeConfig,
+  theUnmovedMoverConfig,
+  lightspeedConfig,
+  walkingThroughFireConfig,
+  theyNeverFeltItMoveConfig,
+  gravityWontHoldMeConfig,
+  cantStopMeConfig,
+  crownOfLightConfig,
+  throneOfThunderConfig,
+  mirrorGardenMugenConfig,
+  priceOfLoveConfig,
+  noSabesNadaConfig,
+  runaDeFuegoConfig,
+  froggyFrogConfig,
+  humanAmongUsConfig,
+  ashesToAnthemsConfig,
+  blueprintsAndBricksConfig,
+  theStickThatEatsSnakesConfig,
+  stickyStickConfig,
+  razorWireConfig,
+  gardenOfEchoesConfig,
+  neonOrbitConfig,
+  zeroRiseConfig,
+  infiniteResponsibilityConfig,
+  whatWeDoinConfig,
+  burnTheQuietConfig,
+  upwardPressureConfig,
+  runItUpConfig,
+  swayLikeFireConfig,
+  mouthFullOfClocksConfig,
+];
+
+export function getSongById(id: string): SongConfig | undefined {
+  return songs.find((s) => s.id === id);
+}
