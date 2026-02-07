@@ -42,6 +42,7 @@ export function VideoPlayer({
           compositionHeight={height}
           fps={fps}
           controls
+          autoPlay
           style={{ width: "100%", height: "100%", display: "block" }}
         />
       </div>
