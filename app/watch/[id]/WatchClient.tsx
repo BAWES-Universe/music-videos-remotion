@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @remotion/non-pure-animation -- Next.js app; no Remotion composition. */
 
 import dynamic from "next/dynamic";
 import Link from "next/link";

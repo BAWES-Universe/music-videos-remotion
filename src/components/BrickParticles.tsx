@@ -41,7 +41,7 @@ export const BrickParticles: React.FC<{
   color?: string;
 }> = ({ intensity = 1, color = "#e94560" }) => {
   const frame = useCurrentFrame();
-  const { width, height, durationInFrames, fps } = useVideoConfig();
+  const { width, durationInFrames, fps } = useVideoConfig();
   const scale = width / REF_WIDTH;
 
   const particles = React.useMemo(

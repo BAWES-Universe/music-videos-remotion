@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+/* eslint-disable @remotion/non-pure-animation -- Gallery page; not a Remotion composition. */
 import Link from "next/link";
 import { songs } from "@/songs/list";
 

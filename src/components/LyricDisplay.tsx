@@ -7,11 +7,11 @@ import {
   useVideoConfig,
 } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Oswald";
-import type { LyricLine } from "../lyrics/parseLyrics";
+import type { LyricLine as LyricLineType } from "../lyrics/parseLyrics";
 
 const { fontFamily } = loadFont();
 
-type Section = LyricLine["section"];
+type Section = LyricLineType["section"];
 
 // Section-specific styling
 const SECTION_STYLES: Record<
@@ -78,9 +78,8 @@ const Word: React.FC<{
   totalWords: number;
   progress: number;
   style: (typeof SECTION_STYLES)[Section];
-  isChorus: boolean;
   scale: number;
-}> = ({ word, index, totalWords, progress, style, isChorus, scale }) => {
+}> = ({ word, index, totalWords, progress, style, scale }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -131,7 +130,6 @@ const Word: React.FC<{
         opacity,
         transform: `translateY(${translateY}px) scale(${highlightScale})`,
         textShadow,
-        transition: "color 0.1s ease",
         marginRight: "0.3em",
         fontWeight: isActive ? 700 : 600,
       }}
@@ -193,7 +191,6 @@ export const LyricLine: React.FC<{
             totalWords={words.length}
             progress={lineProgress}
             style={style}
-            isChorus={isChorus}
             scale={scale}
           />
         ))}

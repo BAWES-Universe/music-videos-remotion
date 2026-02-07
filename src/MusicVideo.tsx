@@ -25,7 +25,6 @@ import {
   type SongConfig,
   getSectionColors,
   getParticleColors,
-  DEFAULT_SECTION_COLORS,
 } from "./types/SongConfig";
 
 export type MusicVideoProps = {
@@ -155,7 +154,7 @@ export const MusicVideo: React.FC<MusicVideoProps> = ({ config, introOffsetSecon
       )}
 
       {/* Title sequence: show at least 3 seconds, or until first lyric if intro is longer */}
-      <Sequence from={0} durationInFrames={titleDurationFrames} premountFor={30}>
+      <Sequence durationInFrames={titleDurationFrames} premountFor={30}>
         <TitleDisplay title={config.title} subtitle={config.subtitle} />
       </Sequence>
 

@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import {
   AbsoluteFill,
-  interpolate,
   useCurrentFrame,
   useVideoConfig,
   staticFile,
@@ -123,7 +122,6 @@ const RadialVisualizer: React.FC<{
             const y2 = centerY + Math.sin(angle) * (baseRadius + barHeight);
 
             // Color based on frequency (bass = primary, treble = secondary)
-            const colorMix = i / numBars;
             const barOpacity = 0.4 + value * 0.6;
 
             return (
@@ -242,7 +240,7 @@ const WaveVisualizer: React.FC<{
   opacity: number;
 }> = ({ frequencyData, primaryColor, secondaryColor, opacity }) => {
   const frame = useCurrentFrame();
-  const { width, height, fps } = useVideoConfig();
+  const { width, height } = useVideoConfig();
   const scale = width / REF_WIDTH;
 
   // Create multiple wave layers

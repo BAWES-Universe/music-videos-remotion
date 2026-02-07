@@ -1,6 +1,7 @@
 import React from "react";
 import {
   AbsoluteFill,
+  Img,
   interpolate,
   useCurrentFrame,
   useVideoConfig,
@@ -63,9 +64,9 @@ const FloatingBrick: React.FC<{
 // Animated gradient background
 export const AnimatedBackground: React.FC<{
   section: Section;
-  sectionProgress: number;
+  sectionProgress?: number;
   sectionColors?: SectionColors;
-}> = ({ section, sectionProgress, sectionColors = DEFAULT_SECTION_COLORS }) => {
+}> = ({ section, sectionColors = DEFAULT_SECTION_COLORS }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -111,15 +112,17 @@ export const AnimatedBackground: React.FC<{
         }}
       />
 
-      {/* Noise texture overlay (tiled so it doesn't stretch and pixelate at 4K) */}
-      <div
+      {/* Noise texture overlay (Img from Remotion for render-safe loading) */}
+      <Img
+        src="data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"
         style={{
           position: "absolute",
           inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
           opacity: 0.03,
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-          backgroundSize: "256px 256px",
-          backgroundRepeat: "repeat",
+          pointerEvents: "none",
         }}
       />
 
