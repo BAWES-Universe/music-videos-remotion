@@ -22,20 +22,29 @@ export function VideoPlayer({
   fps,
 }: VideoPlayerProps) {
   return (
-    <div className="aspect-video w-full" style={{ aspectRatio: `${width} / ${height}` }}>
-      <Player
-        component={MusicVideo}
-        inputProps={{
-          config: song,
-          introOffsetSeconds,
+    <div className="flex h-full w-full items-center justify-center bg-black">
+      <div
+        className="h-full w-full shrink-0"
+        style={{
+          aspectRatio: `${width} / ${height}`,
+          maxWidth: "100%",
+          maxHeight: "100%",
         }}
-        durationInFrames={durationInFrames}
-        compositionWidth={width}
-        compositionHeight={height}
-        fps={fps}
-        controls
-        style={{ width: "100%", height: "100%" }}
-      />
+      >
+        <Player
+          component={MusicVideo}
+          inputProps={{
+            config: song,
+            introOffsetSeconds,
+          }}
+          durationInFrames={durationInFrames}
+          compositionWidth={width}
+          compositionHeight={height}
+          fps={fps}
+          controls
+          style={{ width: "100%", height: "100%", display: "block" }}
+        />
+      </div>
     </div>
   );
 }

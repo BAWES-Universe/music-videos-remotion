@@ -3,5 +3,8 @@ dist
 .DS_Store
 .env
 
+# Next.js
+.next
+
 # Ignore the output video from Git but not videos you import into src/.
 out
