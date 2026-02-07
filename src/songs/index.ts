@@ -36,6 +36,7 @@ export { burnTheQuietConfig } from "./burn-the-quiet/config";
 export { upwardPressureConfig } from "./upward-pressure/config";
 export { runItUpConfig } from "./run-it-up/config";
 export { swayLikeFireConfig } from "./sway-like-fire/config";
+export { mouthFullOfClocksConfig } from "./mouth-full-of-clocks/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";

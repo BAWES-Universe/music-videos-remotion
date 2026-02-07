@@ -65,6 +65,8 @@ export type SongConfig = {
   lyricsOffsetMs?: number;
   /** Extra particle burst timestamps in ms (e.g. solo hits). Same effect as chorus bursts. */
   particleBurstTimesMs?: number[];
+  /** If true, skip decoding audio for duration; use durationSeconds only. Speeds up composition load for long/large audio. */
+  useConfigDurationOnly?: boolean;
 };
 
 // Default section colors (industrial/brick theme)
