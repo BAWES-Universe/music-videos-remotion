@@ -12,6 +12,7 @@ export const mouthFullOfClocksConfig: SongConfig = {
 
   // Fallback duration (auto-detected from audio via calculateMetadata)
   durationSeconds: 205,
+  introOffsetSeconds: 3,
 
   // Visual theme — time, clocks, fragmented (slate + copper, surreal)
   theme: {

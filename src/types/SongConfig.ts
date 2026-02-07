@@ -67,6 +67,8 @@ export type SongConfig = {
   particleBurstTimesMs?: number[];
   /** If true, skip decoding audio for duration; use durationSeconds only. Speeds up composition load for long/large audio. */
   useConfigDurationOnly?: boolean;
+  /** For gallery Player: when first lyric is before 3s, set to 3 so title and lyrics don't overlap. */
+  introOffsetSeconds?: number;
 };
 
 // Default section colors (industrial/brick theme)

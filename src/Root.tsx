@@ -5,56 +5,13 @@ import { getAudioDurationInSeconds } from "@remotion/media-utils";
 import { MusicVideo } from "./MusicVideo";
 import type { MusicVideoProps } from "./MusicVideo";
 import { parseLyricsFromSrt } from "./lyrics/parseLyrics";
-import { heartOfWorkConfig, theFissureConfig, stillnessWeaponizedConfig, pressureButIDontBreakConfig, whenGiantsWakeConfig, reenergizeWhenISeeYouAgainConfig, theArchitectConfig, orbitConfig, brainExeConfig, theUnmovedMoverConfig, lightspeedConfig, walkingThroughFireConfig, theyNeverFeltItMoveConfig, gravityWontHoldMeConfig, cantStopMeConfig, crownOfLightConfig, throneOfThunderConfig, mirrorGardenMugenConfig, priceOfLoveConfig, noSabesNadaConfig, runaDeFuegoConfig, froggyFrogConfig, humanAmongUsConfig, ashesToAnthemsConfig, blueprintsAndBricksConfig, theStickThatEatsSnakesConfig, stickyStickConfig, razorWireConfig, gardenOfEchoesConfig, neonOrbitConfig, zeroRiseConfig, infiniteResponsibilityConfig, whatWeDoinConfig, burnTheQuietConfig, upwardPressureConfig, runItUpConfig, swayLikeFireConfig, mouthFullOfClocksConfig } from "./songs";
-import type { SongConfig } from "./types/SongConfig";
+import { songs } from "./songs/list";
 
 const MIN_TITLE_SECONDS = 3;
 
 const FPS = 30;
 const WIDTH = 3840;
 const HEIGHT = 2160;
-
-// All songs to register as compositions
-const songs: SongConfig[] = [
-  heartOfWorkConfig,
-  theFissureConfig,
-  stillnessWeaponizedConfig,
-  pressureButIDontBreakConfig,
-  whenGiantsWakeConfig,
-  reenergizeWhenISeeYouAgainConfig,
-  theArchitectConfig,
-  orbitConfig,
-  brainExeConfig,
-  theUnmovedMoverConfig,
-  lightspeedConfig,
-  walkingThroughFireConfig,
-  theyNeverFeltItMoveConfig,
-  gravityWontHoldMeConfig,
-  cantStopMeConfig,
-  crownOfLightConfig,
-  throneOfThunderConfig,
-  mirrorGardenMugenConfig,
-  priceOfLoveConfig,
-  noSabesNadaConfig,
-  runaDeFuegoConfig,
-  froggyFrogConfig,
-  humanAmongUsConfig,
-  ashesToAnthemsConfig,
-  blueprintsAndBricksConfig,
-  theStickThatEatsSnakesConfig,
-  stickyStickConfig,
-  razorWireConfig,
-  gardenOfEchoesConfig,
-  neonOrbitConfig,
-  zeroRiseConfig,
-  infiniteResponsibilityConfig,
-  whatWeDoinConfig,
-  burnTheQuietConfig,
-  upwardPressureConfig,
-  runItUpConfig,
-  swayLikeFireConfig,
-  mouthFullOfClocksConfig,
-];
 
 // Auto-detect duration; when first lyric is before MIN_TITLE_SECONDS, push music and add intro
 const calculateMetadata: CalculateMetadataFunction<MusicVideoProps> = async ({

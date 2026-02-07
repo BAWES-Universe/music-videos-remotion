@@ -12,6 +12,7 @@ export const whatWeDoinConfig: SongConfig = {
 
   // Fallback duration (auto-detected from audio via calculateMetadata)
   durationSeconds: 95,
+  introOffsetSeconds: 3,
 
   // Visual theme — electric blue / cyan, anthem energy
   theme: {
