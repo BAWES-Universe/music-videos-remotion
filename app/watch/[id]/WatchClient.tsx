@@ -18,7 +18,7 @@ const VideoPlayer = dynamic(
   }
 );
 
-const UP_NEXT_COUNT = 8;
+const UP_NEXT_COUNT = 15;
 
 type WatchClientProps = {
   song: SongConfig;
