@@ -1,5 +1,22 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { songs } from "@/songs/list";
+
+export const metadata: Metadata = {
+  title: "Gallery",
+  description: `Browse and watch ${songs.length} music videos.`,
+  openGraph: {
+    title: "Gallery | Music Videos",
+    description: `Browse and watch ${songs.length} music videos.`,
+    url: "/",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Gallery | Music Videos",
+    description: `Browse and watch ${songs.length} music videos.`,
+  },
+};
 
 export default function GalleryPage() {
   return (

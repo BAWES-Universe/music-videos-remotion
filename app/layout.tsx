@@ -14,9 +14,29 @@ const dmSans = DM_Sans({
   display: "swap",
 });
 
+const baseUrl =
+  process.env.VERCEL_URL != null
+    ? `https://${process.env.VERCEL_URL}`
+    : process.env.SITE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
-  title: "Music Videos",
+  metadataBase: new URL(baseUrl),
+  title: {
+    default: "Music Videos",
+    template: "%s | Music Videos",
+  },
   description: "Browse and watch music videos",
+  openGraph: {
+    title: "Music Videos",
+    description: "Browse and watch music videos",
+    siteName: "Music Videos",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Music Videos",
+    description: "Browse and watch music videos",
+  },
 };
 
 export default function RootLayout({
