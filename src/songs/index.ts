@@ -37,6 +37,7 @@ export { upwardPressureConfig } from "./upward-pressure/config";
 export { runItUpConfig } from "./run-it-up/config";
 export { swayLikeFireConfig } from "./sway-like-fire/config";
 export { mouthFullOfClocksConfig } from "./mouth-full-of-clocks/config";
+export { backTheLongWayConfig } from "./back-the-long-way/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";
