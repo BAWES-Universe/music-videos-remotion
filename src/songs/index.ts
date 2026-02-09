@@ -38,6 +38,7 @@ export { runItUpConfig } from "./run-it-up/config";
 export { swayLikeFireConfig } from "./sway-like-fire/config";
 export { mouthFullOfClocksConfig } from "./mouth-full-of-clocks/config";
 export { backTheLongWayConfig } from "./back-the-long-way/config";
+export { cameThroughTheNoiseConfig } from "./came-through-the-noise/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";
