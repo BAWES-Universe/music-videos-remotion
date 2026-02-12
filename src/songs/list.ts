@@ -1,5 +1,5 @@
 import type { SongConfig } from "../types/SongConfig";
-import { heartOfWorkConfig, theFissureConfig, stillnessWeaponizedConfig, pressureButIDontBreakConfig, whenGiantsWakeConfig, reenergizeWhenISeeYouAgainConfig, theArchitectConfig, orbitConfig, brainExeConfig, theUnmovedMoverConfig, lightspeedConfig, walkingThroughFireConfig, theyNeverFeltItMoveConfig, gravityWontHoldMeConfig, cantStopMeConfig, crownOfLightConfig, throneOfThunderConfig, mirrorGardenMugenConfig, priceOfLoveConfig, noSabesNadaConfig, runaDeFuegoConfig, froggyFrogConfig, humanAmongUsConfig, ashesToAnthemsConfig, blueprintsAndBricksConfig, theStickThatEatsSnakesConfig, stickyStickConfig, razorWireConfig, gardenOfEchoesConfig, neonOrbitConfig, zeroRiseConfig, infiniteResponsibilityConfig, whatWeDoinConfig, burnTheQuietConfig, upwardPressureConfig, runItUpConfig, swayLikeFireConfig, mouthFullOfClocksConfig, backTheLongWayConfig, cameThroughTheNoiseConfig, theDayTheMusicWonConfig, cutWithStringsConfig } from "./index";
+import { heartOfWorkConfig, theFissureConfig, stillnessWeaponizedConfig, pressureButIDontBreakConfig, whenGiantsWakeConfig, reenergizeWhenISeeYouAgainConfig, theArchitectConfig, orbitConfig, brainExeConfig, theUnmovedMoverConfig, lightspeedConfig, walkingThroughFireConfig, theyNeverFeltItMoveConfig, gravityWontHoldMeConfig, cantStopMeConfig, crownOfLightConfig, throneOfThunderConfig, mirrorGardenMugenConfig, priceOfLoveConfig, noSabesNadaConfig, runaDeFuegoConfig, froggyFrogConfig, humanAmongUsConfig, ashesToAnthemsConfig, blueprintsAndBricksConfig, theStickThatEatsSnakesConfig, stickyStickConfig, razorWireConfig, gardenOfEchoesConfig, neonOrbitConfig, zeroRiseConfig, infiniteResponsibilityConfig, whatWeDoinConfig, burnTheQuietConfig, upwardPressureConfig, runItUpConfig, swayLikeFireConfig, mouthFullOfClocksConfig, backTheLongWayConfig, cameThroughTheNoiseConfig, theDayTheMusicWonConfig, cutWithStringsConfig, goneTooSoonConfig } from "./index";
 
 export const songs: SongConfig[] = [
   heartOfWorkConfig,
@@ -44,6 +44,7 @@ export const songs: SongConfig[] = [
   cameThroughTheNoiseConfig,
   theDayTheMusicWonConfig,
   cutWithStringsConfig,
+  goneTooSoonConfig,
 ];
 
 export function getSongById(id: string): SongConfig | undefined {
