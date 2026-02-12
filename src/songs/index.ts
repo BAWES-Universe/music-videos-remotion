@@ -40,6 +40,7 @@ export { mouthFullOfClocksConfig } from "./mouth-full-of-clocks/config";
 export { backTheLongWayConfig } from "./back-the-long-way/config";
 export { cameThroughTheNoiseConfig } from "./came-through-the-noise/config";
 export { theDayTheMusicWonConfig } from "./the-day-the-music-won/config";
+export { cutWithStringsConfig } from "./cut-with-strings/config";
 
 // Re-export for convenience
 export type { SongConfig } from "../types/SongConfig";
